@@ -13,10 +13,10 @@ import java.io.InputStream;
 public class V2VM {
     public static void processStream(InputStream stream){
         try{
-            //MiniJavaParser parser = new MiniJavaParser(stream);
-            //Goal root = parser.Goal();
-            //pass typecheck = new pass(root);
+            VaporProgram program = parseVapor(System.in, System.err);
+            
             System.out.println("done");
+            System.out.println("test");
         }
         catch (Exception e){
             System.out.println("Type error");
