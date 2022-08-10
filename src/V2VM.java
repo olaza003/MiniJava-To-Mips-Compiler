@@ -1,5 +1,7 @@
 import cs132.util.ProblemException;
 import cs132.vapor.parser.VaporParser;
+import cs132.vapor.ast.VDataSegment;
+import cs132.vapor.ast.VOperand;
 import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
 
@@ -14,7 +16,14 @@ public class V2VM {
     public static void processStream(InputStream stream){
         try{
             VaporProgram program = parseVapor(System.in, System.err);
-            
+            for(VDataSegment it : program.dataSegments){
+              System.out.println("const " + it.ident);
+              for(VOperand.Static ir : it.values){
+                  System.out.println("\t" + ir);
+              }
+              System.out.println();
+            }
+              System.out.println();
             System.out.println("done");
             System.out.println("test");
         }
@@ -22,9 +31,6 @@ public class V2VM {
             System.out.println("Type error");
             e.printStackTrace();
         } 
-        catch(Error e){
-            System.out.println("error");
-        }
     }
     public static void main(String args[]){
         processStream(System.in);
@@ -52,5 +58,14 @@ public class V2VM {
         }
       
         return tree;
+      }
+
+      public void print(VaporProgram vprog){
+          for(VDataSegment it : vprog.dataSegments){
+            System.out.println("const " + it.ident);
+            for(VOperand.Static ir : it.values){
+                System.out.println("\t" + ir);
+            }
+          }
       }
 }
