@@ -3,6 +3,6 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "G:\\CS179Proj\\3rdPhase\\phase3\\src\\vapor-parser.jar"
+        "C:\\Users\\Derek\\Documents\\UCRCS\\phase3\\src\\vapor-parser.jar"
     ]
 }
