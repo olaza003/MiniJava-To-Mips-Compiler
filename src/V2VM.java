@@ -11,28 +11,27 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.InputStream;
 
-
+import hw3.*;
 
 public class V2VM {
     public static void processStream(InputStream stream){
         try{
             VaporProgram program = parseVapor(System.in, System.err);
-            Converter conv = new Converter(program.dataSegments);
-            System.out.println(program.dataSegments);
+            vConverter conv = new vConverter();
+            conv.getSegments(program.dataSegments);
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
-                //do something
             }
         }
         catch (Exception e){
             System.out.println("Type error");
             e.printStackTrace();
-        } 
+        }
     }
-
     public static void main(String args[]){
         processStream(System.in);
     }
+
 
     public static VaporProgram parseVapor(InputStream in, PrintStream err) throws IOException {
         Op[] ops = {
@@ -55,14 +54,14 @@ public class V2VM {
         }
       
         return tree;
-    }
+      }
 
-    public void print(VaporProgram vprog){
-        for(VDataSegment it : vprog.dataSegments){
+      public void print(VaporProgram vprog){
+          for(VDataSegment it : vprog.dataSegments){
             System.out.println("const " + it.ident);
             for(VOperand.Static ir : it.values){
                 System.out.println("\t" + ir);
             }
-        }
-    }
+          }
+      }
 }

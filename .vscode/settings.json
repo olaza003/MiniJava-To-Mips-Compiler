@@ -1,8 +1,0 @@
-{
-    "java.project.sourcePaths": ["src"],
-    "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "C:\\Users\\Derek\\Documents\\UCRCS\\phase3\\src\\vapor-parser.jar"
-    ]
-}
