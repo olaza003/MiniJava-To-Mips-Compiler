@@ -11,11 +11,12 @@ public class RegAllocHelper {
         VInstr[] funcBody = func.body;
 
         for(int i = 0; i < funcBody.length; ++i){
-            VInstr node = funcBody[i];
+            //VInstr node = funcBody[i];
+            Nodes n = funcBody[i].accept(intervalVisitor);
             //System.out.println(node.sourcePos.line + ": " + node.toString());
             //System.out.println(node.accept(intervalVisitor));
             //System.out.println(node.sourcePos.line);
-            node.accept(intervalVisitor);
+            //node.accept(intervalVisitor);
         }
         return graph;
     }
