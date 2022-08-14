@@ -18,9 +18,15 @@ public class V2VM {
         try{
             VaporProgram program = parseVapor(System.in, System.err);
             vConverter conv = new vConverter();
+
             conv.getSegments(program.dataSegments);
+
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
+                FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
+                //System.out.println(func.ident);
+                //System.out.println("  " + func.body);
+                System.out.println();
             }
         }
         catch (Exception e){
