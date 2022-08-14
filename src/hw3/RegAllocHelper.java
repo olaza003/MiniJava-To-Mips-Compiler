@@ -39,6 +39,13 @@ public class RegAllocHelper {
 
             if(prevNode != null)
                 graph.addGraphEdge(prevNode, currNode);
+
+            //label1
+            Nodes n = funcBody[i].accept(intervalVisitor);
+            if(!n.label1Empty()){
+                String str = n.getLabel1();
+
+            }
         }
 
         return graph;

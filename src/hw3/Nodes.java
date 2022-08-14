@@ -15,4 +15,14 @@ public class Nodes {
 
     public String getLabel1(){return label1;}
     public String getLabel2(){return label2;}
+
+    public Boolean label1Empty(){
+        if(label1 == null) return true;
+        return false;
+    }
+
+    public Boolean label2Empty(){
+        if(label2 == null) return true;
+        return false;
+    }
 }
