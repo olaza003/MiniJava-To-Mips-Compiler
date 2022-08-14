@@ -2,84 +2,156 @@ package hw3;
 
 import cs132.vapor.ast.*;
 
-public class IntervalVisit extends VInstr.VisitorR<String, RuntimeException> {
+import java.util.*;
+
+public class IntervalVisit extends VInstr.VisitorR<Nodes, RuntimeException> {
 
     @Override
-    public String visit(VAssign node) throws RuntimeException {
+    public Nodes visit(VAssign node) throws RuntimeException {
+        List<String> temp1 = new ArrayList<>();
         String dest = node.dest.toString();
+        if(dest != null && Character.isLetter(dest.charAt(0))){
+            temp1.add(dest);
+        }
+
         String source = node.source.toString();
+        List<String> temp2 = new ArrayList<>();
+        if(source != null && Character.isLetter(source.charAt(0))){
+            temp2.add(source);
+        }
+
         System.out.println("VAssign dest: " + dest);
         System.out.println("VAssign source: " + source);
-        return null;
+
+        Nodes n = new Nodes(temp1, temp2);
+        return n;
     }
 
     @Override
-    public String visit(VCall node) throws RuntimeException {
+    public Nodes visit(VCall node) throws RuntimeException {
         String dest = node.dest.toString();
+        List<String> temp1 = new ArrayList<>();
         System.out.println("VCall dest: " + dest);
-        for(VOperand op : node.args){
-            String oper = op.toString();
-            System.out.println("VCall op: " + op);
+        if(dest != null && Character.isLetter(dest.charAt(0))){
+            temp1.add(dest);
         }
-        return null;
+
+        List<String> temp2 = new ArrayList<>();
+        for(int i = 0; i < node.args.length; i++){
+            String oper = node.args[i].toString();
+            System.out.println("VCall op: " + oper);
+            if(oper != null && Character.isLetter(oper.charAt(0))){
+                temp2.add(oper);
+            }
+        }
+        Nodes n = new Nodes(temp1, temp2);
+        return n;
     }
 
     @Override
-    public String visit(VBuiltIn node) throws RuntimeException {
-        String dest;
-        if(node.dest != null) {
-            dest = node.dest.toString();
+    public Nodes visit(VBuiltIn node) throws RuntimeException {
+        List<String> temp1 = new ArrayList<>();
+        if(node.dest != null ) {
+            String dest = node.dest.toString();
+            if(Character.isLetter(dest.charAt(0))){
+                temp1.add(dest);
+            }
+
             System.out.println("VbuiltIn dest: " + dest);
         }
-        for(VOperand op : node.args){
-            String oper = op.toString();
-            System.out.println("VbuiltIn op: " + op);
+
+        List<String> temp2 = new ArrayList<>();
+        for(int i = 0; i < node.args.length; i++){
+            String oper = node.args[i].toString();
+            System.out.println("VbuiltIn op: " + oper);
+            if(oper != null && Character.isLetter(oper.charAt(0))){
+                temp2.add(oper);
+            }
         }
-        return null;
+        Nodes n = new Nodes(temp1, temp2);
+        return n;
     }
 
     @Override
-    public String visit(VMemWrite node) throws RuntimeException {
-        VMemRef.Global dest = (VMemRef.Global)node.dest;
-        //String dest = node.dest.toString();
+    public Nodes visit(VMemWrite node) throws RuntimeException {
+        List<String> temp1 = new ArrayList<>();
+        //VMemRef.Global dest = (VMemRef.Global)node.dest;
+        String dest = ((VMemRef.Global)node.dest).base.toString();
+        if(dest != null && Character.isLetter(dest.charAt(0))){
+            temp1.add(dest);
+        }
+
+        List<String> temp2 = new ArrayList<>();
         String source = node.source.toString();
-        System.out.println("VMemWrite dest: " + dest.base.toString());
+        if(source != null && Character.isLetter(source.charAt(0))){
+            temp2.add(source);
+        }
+        System.out.println("VMemWrite dest: " + dest);
         System.out.println("VMemWrite source: " + source);
-        return null;
+        Nodes n = new Nodes(temp1, temp2);
+        return n;
     }
 
     @Override
-    public String visit(VMemRead node) throws RuntimeException {
+    public Nodes visit(VMemRead node) throws RuntimeException {
         String dest = node.dest.toString();
-        VMemRef.Global source = (VMemRef.Global)node.source;
+        List<String> temp1 = new ArrayList<>();
+        if(dest != null && Character.isLetter(dest.charAt(0))){
+            temp1.add(dest);
+        }
+
+        String source = ((VMemRef.Global)node.source).base.toString();
+        List<String> temp2 = new ArrayList<>();
+        if(source != null && Character.isLetter(source.charAt(0))){
+            temp2.add(source);
+        }
         System.out.println("VMemRead dest: " + dest);
-        System.out.println("VMemRead source: " + source.base.toString());
-        return null;
+        System.out.println("VMemRead source: " + source);
+        Nodes n = new Nodes(temp1, temp2);
+        return n;
     }
 
     @Override
-    public String visit(VBranch node) throws RuntimeException {
+    public Nodes visit(VBranch node) throws RuntimeException {
         String source = node.value.toString();
         String target = node.target.toString();
+
+        List<String> temp2 = new ArrayList<>();
+        if(source != null && Character.isLetter(source.charAt(0))){
+            temp2.add(source);
+        }
         System.out.println("VBranch source: " + source);
         System.out.println("VBranch target: " + target);
-        return null;
+        Nodes n = new Nodes(new ArrayList<>(), temp2);
+        n.storeLabel1(target);
+        return n;
     }
 
     @Override
-    public String visit(VGoto node) throws RuntimeException {
+    public Nodes visit(VGoto node) throws RuntimeException {
         String Goto = node.target.toString();
+        String label = node.target.toString().substring(1,node.target.toString().length());
+        System.out.println("****** " + label);
         System.out.println("VGoto target: " + Goto);
-        return null;
+
+        Nodes n = new Nodes(new ArrayList<>(), new ArrayList<>());
+        n.storeLabel2(Goto);
+        return n;
     }
 
     @Override
-    public String visit(VReturn node) throws RuntimeException {
+    public Nodes visit(VReturn node) throws RuntimeException {
         String retValue;
-        if(node.value != null) {
+        List<String> temp2 = new ArrayList<>();
+        if(node.value != null ) {
             retValue = node.value.toString();
+            if(Character.isLetter(retValue.charAt(0))){
+                temp2.add(retValue);
+            }
             System.out.println("VReturn value: " + retValue);
         }
-        return null;
+        Nodes n = new Nodes(new ArrayList<>(), temp2);
+        return n;
     }
+
 }
