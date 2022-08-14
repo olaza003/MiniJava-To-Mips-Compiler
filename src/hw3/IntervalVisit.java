@@ -123,7 +123,7 @@ public class IntervalVisit extends VInstr.VisitorR<Nodes, RuntimeException> {
         System.out.println("VBranch source: " + source);
         System.out.println("VBranch target: " + target);
         Nodes n = new Nodes(new ArrayList<>(), temp2);
-        n.storeLabel1(target);
+        n.storeIfLabel(target);
         return n;
     }
 
@@ -135,7 +135,7 @@ public class IntervalVisit extends VInstr.VisitorR<Nodes, RuntimeException> {
         System.out.println("VGoto target: " + Goto);
 
         Nodes n = new Nodes(new ArrayList<>(), new ArrayList<>());
-        n.storeLabel2(Goto);
+        n.storeGotoLabel(Goto);
         return n;
     }
 

@@ -24,8 +24,6 @@ public class V2VM {
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
-                //System.out.println(func.ident);
-                //System.out.println("  " + func.body);
                 System.out.println();
             }
         }

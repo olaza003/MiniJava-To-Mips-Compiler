@@ -8,13 +8,13 @@ import java.util.List;
 public class FlowGraph {
     public List<FlowGraphNode> nodesList = new ArrayList<FlowGraphNode>();
 
-    public void addGraphNode(Nodes n){
-        nodesList.add(new FlowGraphNode(n));
+    public void addGraphNode(Nodes n, Integer lineNum){
+        nodesList.add(new FlowGraphNode(n, lineNum));
     }
 
-    public void addGraphEdge(FlowGraphNode node1, FlowGraphNode node2){
-        node1.succNode.add(node2);
-        node2.predNode.add(node1);
+    public void addGraphEdge(FlowGraphNode prevNode, FlowGraphNode nextNode){
+        prevNode.succNode.add(nextNode);
+        nextNode.predNode.add(prevNode);
     }
 
     public FlowGraphNode getNode(int bodyIndex){
