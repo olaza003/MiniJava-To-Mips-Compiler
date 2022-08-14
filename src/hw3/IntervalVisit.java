@@ -9,9 +9,12 @@ public class IntervalVisit extends VInstr.VisitorR<Nodes, RuntimeException> {
     @Override
     public Nodes visit(VAssign node) throws RuntimeException {
         List<String> temp1 = new ArrayList<>();
+        //Set<String> def = new HashSet<>();
+        //Set<String> use = new HashSet<>();
         String dest = node.dest.toString();
         if(dest != null && Character.isLetter(dest.charAt(0))){
             temp1.add(dest);
+            //def.add(dest);
         }
 
         String source = node.source.toString();

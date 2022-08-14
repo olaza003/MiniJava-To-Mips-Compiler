@@ -12,12 +12,12 @@ public class RegAllocHelper {
         FlowGraph graph = new FlowGraph();
         IntervalVisit intervalVisitor = new IntervalVisit();
         VInstr[] funcBody = func.body;
-        HashMap<String, Integer> labelMap = new HashMap<String, Integer>();
+        HashMap<String, Integer> labelMap = new HashMap<>();
 
         for(int i = 0; i < funcBody.length; ++i){
             VInstr node = funcBody[i];
             Nodes n = funcBody[i].accept(intervalVisitor);
-            graph.addGraphNode(n, node.sourcePos.line);
+            graph.addGraphNode(n, node.sourcePos.line, n.destination, n.sources);
             //System.out.println(node.sourcePos.line + ": " + node.toString());
             //System.out.println(node.accept(intervalVisitor));
             //System.out.println(node.sourcePos.line);
@@ -28,28 +28,20 @@ public class RegAllocHelper {
             System.out.println(label.instrIndex + ": " + label.ident);
             labelMap.put(label.ident, label.instrIndex);
         }
-        boolean asd = false;
+        boolean gotoCheck = false;
         for(int i = 0; i < funcBody.length; ++i){
             //Nodes n = funcBody[i].accept(intervalVisitor);
             FlowGraphNode currNode = graph.getNode(i);
-            FlowGraphNode prevNode;
+            FlowGraphNode prevNode = (i == 0) ? null : graph.getNode(i-1);
 
-            if(i == 0)
+            if(gotoCheck) {
                 prevNode = null;
-            else
-                prevNode = graph.getNode(i-1);
-            if(asd)
-                prevNode = null;
-            asd=false;
+                gotoCheck = false;
+            }
+
             if(prevNode != null)
                 graph.addGraphEdge(prevNode, currNode);
 
-            //label1
-            /*Nodes n = funcBody[i].accept(intervalVisitor);
-            if(!n.ifLabelEmpty()){
-                String str = n.getIfLabel();
-
-            }*/
             if(!currNode.functionNode.ifLabelEmpty()){
                 String ifLabel = currNode.functionNode.getIfLabel().substring(1);
                 System.out.println(labelMap.get(ifLabel));
@@ -65,7 +57,7 @@ public class RegAllocHelper {
                 FlowGraphNode newNode = graph.getNode(labelMap.get(gotoLabel));
                 graph.addGraphEdge(currNode, newNode);
                 System.out.println();
-                asd = true;
+                gotoCheck = true;
             }
 
             System.out.println("here");
