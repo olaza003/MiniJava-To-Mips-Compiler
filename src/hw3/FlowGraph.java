@@ -8,24 +8,17 @@ import java.util.List;
 public class FlowGraph {
     public List<FlowGraphNode> nodesList = new ArrayList<FlowGraphNode>();
 
-    public void addGraphNode(VInstr currNode, String a, String b){
-        FlowGraphNode newNode = new FlowGraphNode(currNode, a, b);
-        nodesList.add(newNode);
+    public void addGraphNode(Nodes n){
+        nodesList.add(new FlowGraphNode(n));
     }
 
-    public class FlowGraphNode{
-        public int index;
-        public List<FlowGraphNode> succNode; //successor node
-        public List<FlowGraphNode> predNode; //predecessor node
+    public void addGraphEdge(FlowGraphNode node1, FlowGraphNode node2){
+        node1.succNode.add(node2);
+        node2.predNode.add(node1);
+    }
 
-        public String dest;
-        public String source;
-        public VInstr instr;
-
-        public FlowGraphNode(VInstr node, String a, String b){
-            instr = node;
-            dest = a;
-            source = b;
-        }
+    public FlowGraphNode getNode(int bodyIndex){
+        FlowGraphNode node = nodesList.get(bodyIndex);
+        return node;
     }
 }

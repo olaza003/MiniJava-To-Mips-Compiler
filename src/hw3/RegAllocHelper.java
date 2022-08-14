@@ -17,17 +17,29 @@ public class RegAllocHelper {
         for(int i = 0; i < funcBody.length; ++i){
             //VInstr node = funcBody[i];
             Nodes n = funcBody[i].accept(intervalVisitor);
+            graph.addGraphNode(n);
             //System.out.println(node.sourcePos.line + ": " + node.toString());
             //System.out.println(node.accept(intervalVisitor));
             //System.out.println(node.sourcePos.line);
             //node.accept(intervalVisitor);
         }
-        System.out.println("yes");
+
         for(VCodeLabel label : func.labels){
-            labelMap.put(label.ident, label.instrIndex);
-            //System.out.println(label.instrIndex + ": " + label.ident);
+            System.out.println(label.instrIndex + ": " + label.ident);
         }
 
+        for(int i = 0; i < funcBody.length; ++i){
+            //Nodes n = funcBody[i].accept(intervalVisitor);
+            FlowGraphNode currNode = graph.getNode(i);
+            FlowGraphNode prevNode;
+            if(i == 0)
+                prevNode = null;
+            else
+                prevNode = graph.getNode(i-1);
+
+            if(prevNode != null)
+                graph.addGraphEdge(prevNode, currNode);
+        }
 
         return graph;
     }
