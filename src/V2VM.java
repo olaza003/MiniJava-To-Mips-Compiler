@@ -1,6 +1,7 @@
 import cs132.util.ProblemException;
 import cs132.vapor.parser.VaporParser;
 import cs132.vapor.ast.VDataSegment;
+import cs132.vapor.ast.VFunction;
 import cs132.vapor.ast.VOperand;
 import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
@@ -10,27 +11,28 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.InputStream;
 
-
+import hw3.*;
 
 public class V2VM {
     public static void processStream(InputStream stream){
         try{
             VaporProgram program = parseVapor(System.in, System.err);
-            for(VDataSegment it : program.dataSegments){
-              System.out.println("const " + it.ident);
-              for(VOperand.Static ir : it.values){
-                  System.out.println("\t" + ir);
-              }
-              System.out.println();
+            vConverter conv = new vConverter();
+
+            conv.getSegments(program.dataSegments);
+
+            for(VFunction func : program.functions){
+                System.out.println(func.ident);
+                FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
+                //System.out.println(func.ident);
+                //System.out.println("  " + func.body);
+                System.out.println();
             }
-              System.out.println();
-            System.out.println("done");
-            System.out.println("test");
         }
         catch (Exception e){
             System.out.println("Type error");
             e.printStackTrace();
-        } 
+        }
     }
     public static void main(String args[]){
         processStream(System.in);
