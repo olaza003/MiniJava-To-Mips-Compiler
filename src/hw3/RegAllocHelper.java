@@ -4,7 +4,7 @@ import cs132.vapor.ast.VCodeLabel;
 import cs132.vapor.ast.VFunction;
 import cs132.vapor.ast.VInstr;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class RegAllocHelper {
 
@@ -62,9 +62,30 @@ public class RegAllocHelper {
 
             System.out.println("here");
         }
-
-        graph.computeLiveness();
-
         return graph;
+    }
+
+    public static List<IntervalNode> generateLiveIntervals(FlowGraph graph, Liveness liveness){
+
+        HashMap<String, IntervalNode> intervalMap = new HashMap<>();
+        for(int i = 0; i < graph.nodesList.size(); ++i){
+            FlowGraphNode n = graph.nodesList.get(i);
+            List<String> active = new ArrayList<>();
+            active = graph.union(liveness.inList.get(i), liveness.defList.get(i));
+
+            for(int j = 0; j < active.size(); ++j){
+                String currString = active.get(j);
+                if(intervalMap.containsKey(currString)){
+                    intervalMap.get(currString).end = i;
+                }else{
+                    intervalMap.put(currString, new IntervalNode(i, currString)); //create interval object with start time and currString.
+                                                                                  //end time is updated when currString is found in hashmap
+                }
+            }
+        }
+        List<IntervalNode> temp = new ArrayList<>();
+        for(IntervalNode iNode : intervalMap.values())
+            temp.add(iNode);
+        return temp;
     }
 }

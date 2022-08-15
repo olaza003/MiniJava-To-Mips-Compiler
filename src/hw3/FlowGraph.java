@@ -20,7 +20,10 @@ public class FlowGraph {
     }
 
     public Liveness computeLiveness(){
-
+        List<List<String>> inList = new ArrayList<>();
+        List<List<String>> outList = new ArrayList<>();
+        List<List<String>> defList = new ArrayList<>();
+        List<List<String>> useList = new ArrayList<>();
         for(FlowGraphNode n: nodesList){
            n.in = new ArrayList<>();
            n.out = new ArrayList<>();
@@ -28,8 +31,9 @@ public class FlowGraph {
         int counter = 0;
         boolean[] check = new boolean[nodesList.size()];
         do{
-            int i = 0;
-            for(FlowGraphNode n: nodesList){
+            int count = 0;
+            for(int i = 0; i < nodesList.size(); ++i){
+                FlowGraphNode n = nodesList.get(i);
                 List<String> inPrime = n.in; //in'[n] = in[n]
                 List<String> outPrime = n.out; //out'[n] = out[n]
                 //def = destination; use = source
@@ -49,11 +53,16 @@ public class FlowGraph {
 
                 n.in = temp;
                 n.out = temp2;
-                check[i++] = CheckSimilarity(n.in, inPrime, n.out, outPrime);
+                inList.add(n.in);
+                outList.add(n.out);
+                defList.add(n.def);
+                useList.add(n.use);
+                check[count++] = CheckSimilarity(n.in, inPrime, n.out, outPrime);
             }
             counter++;
         }while(!Alltrue(check));
-        return
+        System.out.println("counter: " + counter);
+        return new Liveness(inList, defList, useList);
     }
 
     public ArrayList<String> union(List<String> LHS, List<String> RHS){
