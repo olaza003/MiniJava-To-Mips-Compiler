@@ -24,7 +24,7 @@ public class V2VM {
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
-                //Liveness liveness = graph.computeLiveness();
+                Liveness liveness = graph.computeLiveness();
                 System.out.println();
             }
         }

@@ -19,13 +19,13 @@ public class FlowGraph {
         return node;
     }
 
-    public void computeLiveness(){
+    public Liveness computeLiveness(){
 
         for(FlowGraphNode n: nodesList){
            n.in = new ArrayList<>();
            n.out = new ArrayList<>();
         }
-
+        int counter = 0;
         boolean[] check = new boolean[nodesList.size()];
         do{
             int i = 0;
@@ -41,16 +41,19 @@ public class FlowGraph {
 
                 List<String> temp2 = new ArrayList<>();
                 //out[n] = U(in all s in the n success Node) in[s]
-                for(FlowGraphNode s: n.succNode) {
+                for(FlowGraphNode s: n.succNode) { //union of the in of the succ instructions
                     //n.out = union(n.in, s.);
-                    AddArray(temp2, s.in);
+                    //AddArray(temp2, s.in);
+                    temp2 = union(temp2, s.in);
                 }
 
                 n.in = temp;
                 n.out = temp2;
                 check[i++] = CheckSimilarity(n.in, inPrime, n.out, outPrime);
             }
-        }while(Alltrue(check));
+            counter++;
+        }while(!Alltrue(check));
+        return
     }
 
     public ArrayList<String> union(List<String> LHS, List<String> RHS){
@@ -85,10 +88,7 @@ public class FlowGraph {
     }
 
     public boolean CheckSimilarity(List<String> in1, List<String> in2, List<String> out1, List<String> out2){
-        if(in1.equals(in2) && out1.equals(out2))
-            return true;
-
-        return false;
+        return (in1.equals(in2) && out1.equals(out2));
     }
 
     public boolean Alltrue(boolean[] b){
