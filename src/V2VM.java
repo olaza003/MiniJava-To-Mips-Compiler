@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.InputStream;
 
+import java.util.*;
+
 import hw3.*;
 
 public class V2VM {
@@ -24,7 +26,8 @@ public class V2VM {
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
-                //Liveness liveness = graph.computeLiveness();
+                Liveness liveness = graph.computeLiveness();
+                List<IntervalNode> intervals = RegAllocHelper.generateLiveIntervals(graph, liveness); //'this' variable range incorrect, everything else correct
                 System.out.println();
             }
         }
