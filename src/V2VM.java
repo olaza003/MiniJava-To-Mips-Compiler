@@ -19,6 +19,7 @@ public class V2VM {
     public static void processStream(InputStream stream){
         try{
             VaporProgram program = parseVapor(System.in, System.err);
+            Allocator allocator = new Allocator();
             vConverter conv = new vConverter();
 
             conv.getSegments(program.dataSegments);
@@ -28,6 +29,8 @@ public class V2VM {
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
                 Liveness liveness = graph.computeLiveness();
                 List<IntervalNode> intervals = RegAllocHelper.generateLiveIntervals(graph, liveness); //'this' variable range incorrect, everything else correct
+                AllocationMap map = allocator.computeAllocation(intervals, func.params);
+                conv.outputFunction(func, map, liveness);
                 System.out.println();
             }
         }
@@ -71,5 +74,5 @@ public class V2VM {
                 System.out.println("\t" + ir);
             }
           }
-      }
+    }
 }

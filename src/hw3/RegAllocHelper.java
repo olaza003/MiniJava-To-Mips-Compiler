@@ -70,7 +70,7 @@ public class RegAllocHelper {
         HashMap<String, IntervalNode> intervalMap = new HashMap<>();
         for(int i = 0; i < graph.nodesList.size(); ++i){
             FlowGraphNode n = graph.nodesList.get(i);
-            List<String> active = new ArrayList<>();
+            List<String> active;
             active = graph.union(liveness.inList.get(i), liveness.defList.get(i));
 
             for(int j = 0; j < active.size(); ++j){
