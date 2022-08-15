@@ -2,18 +2,23 @@ package hw3;
 
 import cs132.vapor.ast.VVarRef;
 
-import java.util.List;
+import java.util.*;
 
 public class Allocator {
-    List<String> activeList;
-
+    List<IntervalNode> active;
+    List<Register> registerPool;
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
-        List<String> active;
+        active = new ArrayList<>();
+        registerPool = Register.createRegisterPool();
         sortStartIntervalList(intervals);
-
-
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
+            if(active.size() == registerPool.size())
+                spillAtInterval(i);
+            else {
+                //remove from pool of registers
+                active.add(i);
+            }
         }
 
 
@@ -22,7 +27,32 @@ public class Allocator {
     }
 
     public void expireOldIntervals(IntervalNode i){
+        for(IntervalNode j: active){
+            if(j.end >= i.start)
+                return;
+            active.remove(j);
+            registerPool.add(i.register);
+            //add register[j] to pool of free registers
+        }
+    }
 
+    public void spillAtInterval(IntervalNode i){
+        IntervalNode spill = active.get(active.size() - 1);
+        if(spill.end > i.end){
+            i.register = spill.register;
+            //spill.location = new stack location;
+            active.remove(spill);
+            insertByEndPoint(i);
+        }
+    }
+
+    public void insertByEndPoint(IntervalNode iNode){
+        for(int i = 0; i < active.size(); ++i){
+            if(active.get(i).end > iNode.end) {
+                active.add(i - 1, iNode);
+                return;
+            }
+        }
     }
 
     public void sortStartIntervalList(List<IntervalNode> intervals){
