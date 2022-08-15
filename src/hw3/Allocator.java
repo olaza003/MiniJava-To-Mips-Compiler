@@ -5,12 +5,18 @@ import cs132.vapor.ast.VVarRef;
 import java.util.*;
 
 public class Allocator {
-    List<IntervalNode> active;
-    List<Register> registerPool;
+    public List<IntervalNode> active;
+    public List<Register> registerPool;
+
+    public List<IntervalNode> intervalStack;
+
+    public HashMap<String, Register> regHashMap;
+
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
+
         active = new ArrayList<>();
         registerPool = Register.createRegisterPool();
-        sortStartIntervalList(intervals);
+        sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
             if(active.size() == registerPool.size())
@@ -18,11 +24,13 @@ public class Allocator {
             else {
                 //remove from pool of registers
                 active.add(i);
+                sortIntervalList(active, false);
             }
         }
 
 
-        AllocationMap temp = new AllocationMap();
+
+        AllocationMap temp = new AllocationMap(regHashMap);
         return temp;
     }
 
@@ -31,8 +39,7 @@ public class Allocator {
             if(j.end >= i.start)
                 return;
             active.remove(j);
-            registerPool.add(i.register);
-            //add register[j] to pool of free registers
+            registerPool.add(j.register);
         }
     }
 
@@ -40,27 +47,24 @@ public class Allocator {
         IntervalNode spill = active.get(active.size() - 1);
         if(spill.end > i.end){
             i.register = spill.register;
-            //spill.location = new stack location;
+            intervalStack.add(spill);
             active.remove(spill);
-            insertByEndPoint(i);
+            active.add(i);
+            sortIntervalList(active, false);
         }
+        else
+            intervalStack.add(i);
     }
 
-    public void insertByEndPoint(IntervalNode iNode){
-        for(int i = 0; i < active.size(); ++i){
-            if(active.get(i).end > iNode.end) {
-                active.add(i - 1, iNode);
-                return;
-            }
-        }
-    }
-
-    public void sortStartIntervalList(List<IntervalNode> intervals){
+    public void sortIntervalList(List<IntervalNode> intervals, boolean isStart){
         for(int i = 0; i < intervals.size(); i++){
             IntervalNode min = intervals.get(i);
             int minId = i;
             for(int j = i + 1; j < intervals.size(); j++){
-                if(intervals.get(j).start < min.start){
+                int jVal = (isStart) ? intervals.get(j).start : intervals.get(j).end;
+                int minVal = (isStart) ? min.start: min.end;
+
+                if(jVal < minVal){
                     min = intervals.get(j);
                     minId = j;
                 }
