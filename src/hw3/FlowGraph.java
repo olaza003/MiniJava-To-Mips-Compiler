@@ -25,15 +25,32 @@ public class FlowGraph {
            n.in = new ArrayList<>();
            n.out = new ArrayList<>();
         }
+
+        boolean[] check = new boolean[nodesList.size()];
         do{
+            int i = 0;
             for(FlowGraphNode n: nodesList){
-                List<String> inPrime = n.in;
-                List<String> outPrime = n.out;
-                n.in = union(n.use, subtraction(n.out, n.def));
-                for(FlowGraphNode s: n.succNode)
-                    n.out = union(n.in, s.);
+                List<String> inPrime = n.in; //in'[n] = in[n]
+                List<String> outPrime = n.out; //out'[n] = out[n]
+                //def = destination; use = source
+
+                //in[n] = use[n] U (out[n] - def[n])
+                List<String> temp = new ArrayList<>();
+                temp = union(n.use, subtraction(n.out, n.def));
+                //n.in = union(n.use, subtraction(n.out, n.def));
+
+                List<String> temp2 = new ArrayList<>();
+                //out[n] = U(in all s in the n success Node) in[s]
+                for(FlowGraphNode s: n.succNode) {
+                    //n.out = union(n.in, s.);
+                    AddArray(temp2, s.in);
+                }
+
+                n.in = temp;
+                n.out = temp2;
+                check[i++] = CheckSimilarity(n.in, inPrime, n.out, outPrime);
             }
-        }while()
+        }while(Alltrue(check));
     }
 
     public ArrayList<String> union(List<String> LHS, List<String> RHS){
@@ -60,4 +77,25 @@ public class FlowGraph {
         }
         return tempList;
     }
+
+    public void AddArray(List<String> LHS, List<String> RHS){
+        for(String str : RHS){
+            LHS.add(str);
+        }
+    }
+
+    public boolean CheckSimilarity(List<String> in1, List<String> in2, List<String> out1, List<String> out2){
+        if(in1.equals(in2) && out1.equals(out2))
+            return true;
+
+        return false;
+    }
+
+    public boolean Alltrue(boolean[] b){
+        for(int i = 0; i < b.length; i++){
+            if(b[i] == false) return false;
+        }
+        return true;
+    }
+
 }

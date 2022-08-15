@@ -63,6 +63,8 @@ public class RegAllocHelper {
             System.out.println("here");
         }
 
+        graph.computeLiveness();
+
         return graph;
     }
 }
