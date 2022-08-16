@@ -55,10 +55,10 @@ public class FlowGraph {
 
                 n.in = temp;
                 n.out = temp2;
-                inList.add(n.in);
+                /*inList.add(n.in);
                 outList.add(n.out);
                 defList.add(n.def);
-                useList.add(n.use);
+                useList.add(n.use);*/
                 check[count++] = CheckSimilarity(n.in, inPrime, n.out, outPrime);
             }
             counter++;

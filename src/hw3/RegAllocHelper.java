@@ -64,6 +64,7 @@ public class RegAllocHelper {
 
             System.out.println("here");
         }
+        System.out.println();
         return graph;
     }
 
@@ -73,24 +74,22 @@ public class RegAllocHelper {
         for(int i = 0; i < graph.nodesList.size(); ++i){
             FlowGraphNode n = graph.nodesList.get(i);
             List<String> active;
-            active = graph.union(liveness.inList.get(i), liveness.defList.get(i));
-            //active = graph.union(n.out, n.def);
+            //active = graph.union(liveness.inList.get(i), liveness.defList.get(i));
+            active = graph.union(n.in, n.def);
 
             for(int j = 0; j < active.size(); ++j){
                 String currString = active.get(j);
                 if(intervalMap.containsKey(currString)){
-                    intervalMap.get(currString).end = i;
+                    intervalMap.get(currString).start = Math.min(intervalMap.get(currString).start, i);
+                    intervalMap.get(currString).end = Math.max(intervalMap.get(currString).end, i);
                 }else{
-                    intervalMap.put(currString, new IntervalNode(i, currString)); //create interval object with start time and currString.
+                    intervalMap.put(currString, new IntervalNode(i, i, currString)); //create interval object with start time and currString.
                                                                                   //end time is updated when currString is found in hashmap
 
-                    /*if(n.functionNode.calle) {
-                        intervalMap.get(currString).calle = true;
-                        System.out.println("Is Callee: " + intervalMap.get(currString).variable);
-                    } */
                 }
             }
         }
+        System.out.println();
 
         for(FlowGraphNode n : graph.nodesList){
             List<String> temp = n.removeDuplicate(n.out, n.def);

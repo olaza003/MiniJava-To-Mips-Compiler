@@ -23,6 +23,7 @@ public class V2VM {
             vConverter conv = new vConverter();
 
             conv.getSegments(program.dataSegments);
+            //System.out.println(program.functions.);
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
