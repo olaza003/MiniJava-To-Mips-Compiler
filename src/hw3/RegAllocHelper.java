@@ -1,5 +1,6 @@
 package hw3;
 
+import cs132.vapor.ast.VCall;
 import cs132.vapor.ast.VCodeLabel;
 import cs132.vapor.ast.VFunction;
 import cs132.vapor.ast.VInstr;
@@ -17,7 +18,8 @@ public class RegAllocHelper {
         for(int i = 0; i < funcBody.length; ++i){
             VInstr node = funcBody[i];
             Nodes n = funcBody[i].accept(intervalVisitor);
-            graph.addGraphNode(n, node.sourcePos.line, n.destination, n.sources);
+            if(node instanceof VCall) n.calle = true;
+            graph.addGraphNode(n, node.sourcePos.line, n.destination, n.sources, node);
             //System.out.println(node.sourcePos.line + ": " + node.toString());
             //System.out.println(node.accept(intervalVisitor));
             //System.out.println(node.sourcePos.line);
@@ -80,10 +82,24 @@ public class RegAllocHelper {
                 }else{
                     intervalMap.put(currString, new IntervalNode(i, currString)); //create interval object with start time and currString.
                                                                                   //end time is updated when currString is found in hashmap
-                    if(n.functionNode.calle)
+
+                    /*if(n.functionNode.calle) {
                         intervalMap.get(currString).calle = true;
+                        System.out.println("Is Callee: " + intervalMap.get(currString).variable);
+                    } */
                 }
             }
+        }
+
+        for(FlowGraphNode n : graph.nodesList){
+            List<String> temp = n.removeDuplicate(n.out, n.def);
+            if(n.vi instanceof VCall){
+                for(String str : temp){
+                    intervalMap.get(str).setCalle();
+                    //System.out.println("Is callee: " + str);
+                }
+            }
+            System.out.println();
         }
         System.out.println();
         List<IntervalNode> temp = new ArrayList<>();

@@ -1,12 +1,14 @@
 package hw3;
 
+import cs132.vapor.ast.VInstr;
+
 import java.util.*;
 
 public class FlowGraph {
     public List<FlowGraphNode> nodesList = new ArrayList<>();
 
-    public void addGraphNode(Nodes n, Integer lineNum, List<String> d, List<String> src){
-        nodesList.add(new FlowGraphNode(n, lineNum, d, src));
+    public void addGraphNode(Nodes n, Integer lineNum, List<String> d, List<String> src, VInstr v){
+        nodesList.add(new FlowGraphNode(n, lineNum, d, src, v));
     }
 
     public void addGraphEdge(FlowGraphNode prevNode, FlowGraphNode nextNode){
@@ -106,5 +108,6 @@ public class FlowGraph {
         }
         return true;
     }
+
 
 }

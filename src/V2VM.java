@@ -28,8 +28,8 @@ public class V2VM {
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
                 Liveness liveness = graph.computeLiveness();
                 List<IntervalNode> intervals = RegAllocHelper.generateLiveIntervals(graph, liveness); //'this' variable range incorrect, everything else correct
-                AllocationMap map = allocator.computeAllocation(intervals, func.params);
-                conv.outputFunction(func, map, liveness);
+                //AllocationMap map = allocator.computeAllocation(intervals, func.params);
+                //conv.outputFunction(func, map, liveness);
                 System.out.println();
             }
         }
