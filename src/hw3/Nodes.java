@@ -7,6 +7,8 @@ public class Nodes {
     public List<String> destination; //VVarRef
     public List<String> sources; //VOperand
 
+    public boolean calle = false;
+
     public Nodes(List<String> des, List<String> sor){destination = des; sources = sor;}
 
     public void storeIfLabel(String str){ifLabel = str;}

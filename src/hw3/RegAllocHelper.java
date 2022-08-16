@@ -80,9 +80,12 @@ public class RegAllocHelper {
                 }else{
                     intervalMap.put(currString, new IntervalNode(i, currString)); //create interval object with start time and currString.
                                                                                   //end time is updated when currString is found in hashmap
+                    if(n.functionNode.calle)
+                        intervalMap.get(currString).calle = true;
                 }
             }
         }
+        System.out.println();
         List<IntervalNode> temp = new ArrayList<>();
         for(IntervalNode iNode : intervalMap.values())
             temp.add(iNode);

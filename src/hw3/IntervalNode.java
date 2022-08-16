@@ -8,6 +8,8 @@ public class IntervalNode {
 
     public Register register;
 
+    public boolean calle = false;
+
     public IntervalNode(int startTime, String varName){
         start = startTime;
         variable = varName;
@@ -18,4 +20,6 @@ public class IntervalNode {
         end = endTime;
         variable = varName;
     }
+
+    public void setCalle(){calle = true;}
 }
