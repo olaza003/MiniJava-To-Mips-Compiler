@@ -6,8 +6,6 @@ public class IntervalNode {
     public int location;
     public String variable;
 
-    public Register register;
-
     public boolean calle = false;
 
     public IntervalNode(int startTime, String varName){

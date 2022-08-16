@@ -5,10 +5,10 @@ import java.util.List;
 
 public class RegisterPool {
 
-    public List<Register> regInUse; //list of registers currently in use
-    public List<Register> allRegisters;
+    public List<Register> regInUse = new ArrayList<>(); //list of registers currently in use
+    public List<Register> allRegisters = new ArrayList<>();
 
-    public void createRegisterPool(String[] regs){
+    public RegisterPool(String[] regs){
         for(String reg: regs)
             allRegisters.add(new Register(reg));
     }
@@ -26,6 +26,6 @@ public class RegisterPool {
     }
 
     public void freeUsed(Register reg){
-
+        regInUse.remove(reg);
     }
 }

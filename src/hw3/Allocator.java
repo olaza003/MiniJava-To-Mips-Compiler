@@ -15,9 +15,9 @@ public class Allocator {
     public HashMap<String, Register> regHashMap = new HashMap<>();
 
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
-
+        regPool = new RegisterPool(registers);
         active = new ArrayList<>();
-        regPool.createRegisterPool(registers);
+
         sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
@@ -26,8 +26,8 @@ public class Allocator {
             else {
                 regHashMap.put(i.variable, regPool.getRegister());
                 active.add(i);
-                sortIntervalList(active, false);
             }
+            sortIntervalList(active, false);
         }
         AllocationMap temp = new AllocationMap(regHashMap);
         return temp;
@@ -38,18 +38,17 @@ public class Allocator {
             if(j.end >= i.start)
                 return;
             active.remove(j);
-            //regPool.add(j.register);
+            regPool.freeUsed(regHashMap.get(j.variable));
         }
     }
 
     public void spillAtInterval(IntervalNode i){
         IntervalNode spill = active.get(active.size() - 1);
         if(spill.end > i.end){
-            i.register = spill.register;
+            regHashMap.put(i.variable, regHashMap.get(spill.variable));
             intervalStack.add(spill);
             active.remove(spill);
             active.add(i);
-            sortIntervalList(active, false);
         }
         else
             intervalStack.add(i);
