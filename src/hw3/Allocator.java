@@ -6,30 +6,29 @@ import java.util.*;
 
 public class Allocator {
     public List<IntervalNode> active;
-    public List<Register> registerPool;
+
+    public RegisterPool regPool;
+    public String[] registers = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"};
 
     public List<IntervalNode> intervalStack;
 
-    public HashMap<String, Register> regHashMap;
+    public HashMap<String, Register> regHashMap = new HashMap<>();
 
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
 
         active = new ArrayList<>();
-        registerPool = Register.createRegisterPool();
+        regPool.createRegisterPool(registers);
         sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
-            if(active.size() == registerPool.size())
+            if(active.size() == regPool.allRegisters.size())
                 spillAtInterval(i);
             else {
-                //remove from pool of registers
+                regHashMap.put(i.variable, regPool.getRegister());
                 active.add(i);
                 sortIntervalList(active, false);
             }
         }
-
-
-
         AllocationMap temp = new AllocationMap(regHashMap);
         return temp;
     }
@@ -39,7 +38,7 @@ public class Allocator {
             if(j.end >= i.start)
                 return;
             active.remove(j);
-            registerPool.add(j.register);
+            //regPool.add(j.register);
         }
     }
 
