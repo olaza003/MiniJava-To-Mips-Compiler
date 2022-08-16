@@ -74,6 +74,7 @@ public class RegAllocHelper {
             FlowGraphNode n = graph.nodesList.get(i);
             List<String> active;
             active = graph.union(liveness.inList.get(i), liveness.defList.get(i));
+            //active = graph.union(n.out, n.def);
 
             for(int j = 0; j < active.size(); ++j){
                 String currString = active.get(j);

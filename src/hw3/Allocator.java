@@ -9,40 +9,56 @@ public class Allocator {
 
     public RegisterPool regPool;
     public String[] registers = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"};
+    //
+    public String[] sRegisters = {"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"};
+
 
     public List<IntervalNode> intervalStack;
 
     public HashMap<String, Register> regHashMap = new HashMap<>();
 
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
-        regPool = new RegisterPool(registers);
+        regPool = new RegisterPool(registers, sRegisters);
         active = new ArrayList<>();
+        intervalStack = new ArrayList<>();
 
         sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
-            if(active.size() == regPool.allRegisters.size())
+            //System.out.println("regPool size: "+ regPool.allRegisters.size());
+            if(active.size() == regPool.allRegisters.size()) //
                 spillAtInterval(i);
             else {
-                regHashMap.put(i.variable, regPool.getRegister());
+                regHashMap.put(i.variable, regPool.getRegister(i));
                 active.add(i);
             }
             sortIntervalList(active, false);
         }
         AllocationMap temp = new AllocationMap(regHashMap);
+        System.out.println("temp map: ");
+        HashMap<String, Register> t = temp.registerHashMap;
+        System.out.println("{");
+        for(String str : t.keySet()){
+            System.out.printf(str + "=" + t.get(str).register + ", ");
+
+        }
         return temp;
     }
 
     public void expireOldIntervals(IntervalNode i){
-        for(IntervalNode j: active){
+        System.out.println();
+        List<IntervalNode> tempActive = new ArrayList<>(active);
+        for(IntervalNode j: tempActive){
             if(j.end >= i.start)
                 return;
-            active.remove(j);
             regPool.freeUsed(regHashMap.get(j.variable));
+            active.remove(j);
+
         }
     }
 
     public void spillAtInterval(IntervalNode i){
+        System.out.println("Active size: " + active.size());
         IntervalNode spill = active.get(active.size() - 1);
         if(spill.end > i.end){
             regHashMap.put(i.variable, regHashMap.get(spill.variable));
