@@ -29,7 +29,7 @@ public class V2VM {
                 Liveness liveness = graph.computeLiveness();
                 List<IntervalNode> intervals = RegAllocHelper.generateLiveIntervals(graph, liveness); //'this' variable range incorrect, everything else correct
                 AllocationMap map = allocator.computeAllocation(intervals, func.params);
-                //conv.outputFunction(func, map, liveness);
+                conv.outputFunction(func, map, liveness);
                 printHelper(func, graph, liveness, intervals, map);
                 System.out.println();
 

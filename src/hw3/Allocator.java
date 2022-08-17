@@ -25,7 +25,6 @@ public class Allocator {
         sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
-            //System.out.println("regPool size: "+ regPool.allRegisters.size());
             if(active.size() == regPool.allRegisters.size()) //
                 spillAtInterval(i);
             else {
