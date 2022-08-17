@@ -122,6 +122,7 @@ public class vConverter {
             i++;
         }
         i = 0;
+        int var = 0;
         for(VVarRef.Local param :func.params){
             String paramIdent = param.ident;
             if(i < 4) {
@@ -131,7 +132,7 @@ public class vConverter {
             }
             else{
                 if (map.registerHashMap.containsKey(paramIdent)) {
-                    fileString += tab + map.registerHashMap.get(paramIdent).register + String.format(" = in[%s]\n", i);
+                    fileString += tab + map.registerHashMap.get(paramIdent).register + String.format(" = in[%s]\n", var++);
                 }
             }
             i++;
