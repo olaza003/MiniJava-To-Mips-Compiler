@@ -26,6 +26,7 @@ public class vConverter {
             for (VOperand.Static value : segment.values) {
                 fileOutput += tab + value.toString() + "\n";
             }
+            fileOutput += "\n";
             decrementTab();
 
         }
@@ -49,7 +50,8 @@ public class vConverter {
     }
 
     public void decrementTab(){
-        tab = tab.substring(0, 2);
+        int decrease = tab.length() - 2;
+        tab = tab.substring(0, decrease);
     }
 
     public void writeToFile(String output){
