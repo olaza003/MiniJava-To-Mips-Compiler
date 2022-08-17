@@ -51,6 +51,8 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
                     output += vCall.args[i].toString() + "\n";
             }
         }
+        output += tab + "call " + map.registerHashMap.get(vCall.addr.toString()).register + "\n";
+        output += tab + map.registerHashMap.get(vCall.addr.toString()).register + " = $v0";
         return output;
     }
 
