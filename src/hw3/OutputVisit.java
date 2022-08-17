@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
@@ -45,7 +46,7 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
             else {
                 output += tab + "out[" + Integer.toString(i - 4) + "] = ";
                 if(map.registerHashMap.containsKey(vCall.args[i].toString()))
-                    output += map.registerHashMap.get(vCall.args[i].toString()) + "\n";
+                    output += map.registerHashMap.get(vCall.args[i].toString()).register + "\n";
                 else
                     output += vCall.args[i].toString() + "\n";
             }
@@ -93,7 +94,16 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
     @Override
     public String visit(VMemRead vMemRead) throws RuntimeException {
-        return null;
+        Register dest = map.registerHashMap.get(vMemRead.dest.toString());
+        Register src = map.registerHashMap.get(((VMemRef.Global)vMemRead.source).base.toString());
+        String LHS = dest.register;
+        String RHS = String.format("[%s", src.register);
+        if(dest.register.equals(src.register)){
+            RHS += String.format(" + %d]", ((VMemRef.Global)vMemRead.source).byteOffset);
+        }
+        else
+            RHS += "]";
+        return LHS + " = " + RHS;
     }
 
     @Override
@@ -111,6 +121,13 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
     @Override
     public String visit(VReturn vReturn) throws RuntimeException {
-        return null;
+        String output = "";
+        if(vReturn.value != null){
+            String retValue = (map.registerHashMap.containsKey(vReturn.value.toString())) ?
+                            map.registerHashMap.get(vReturn.value.toString()).register :
+                            vReturn.value.toString();
+            output += "$v0 = " + retValue + "\n" + tab;
+        }
+        return output + "ret";
     }
 }

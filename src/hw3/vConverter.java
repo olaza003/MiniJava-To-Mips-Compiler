@@ -2,40 +2,40 @@ package hw3;
 import cs132.vapor.ast.*;
 
 import java.io.FileWriter;
-import java.util.HashMap;
+import java.util.*;
 
 public class vConverter {
 
-    public String fileOutput;
+    public String fileString;
 
     public FileWriter outputFile;
 
     public String tab;
 
     public vConverter(){
-        fileOutput = "";
+        fileString = "";
         tab = "";
     }
 
     public void getSegments(VDataSegment[] convSegment){
         for(VDataSegment segment : convSegment){
-            fileOutput += "const " + segment.ident + "\n";
+            fileString += "const " + segment.ident + "\n";
             incrementTab();
             for (VOperand.Static value : segment.values) {
-                fileOutput += tab + value.toString() + "\n";
+                fileString += tab + value.toString() + "\n";
             }
-            fileOutput += "\n";
+            fileString += "\n";
             decrementTab();
 
         }
     }
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
-        //fileOutput += "func " + func.ident + "\n";
+        //fileString += "func " + func.ident + "\n";
         int labelOffset = 0;
-        Boolean labelFinished = false;
-
-        int local = getLocal(map);
+        boolean labelFinished = false;
+        HashMap<String, Register> localMap = new HashMap<>();
+        int local = getLocal(map, localMap);
         int in = func.params.length - 4;
         if(in < 0) in = 0;
         int out = 0;
@@ -50,11 +50,9 @@ public class vConverter {
             if(out < holder) out = holder;
         }
 
+        printFuncLine(func, in, out, local);
+        printArgs(func, in, out, map, localMap);
 
-
-        fileOutput += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]\n";
-        System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");
-        incrementTab();
         OutputVisit outputVisitor = new OutputVisit(map, tab);
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
@@ -70,11 +68,11 @@ public class vConverter {
             }
             String n = vInstr.accept(outputVisitor);
 
-            fileOutput += tab + n + "\n";
+            fileString += tab + n + "\n";
         }
-        fileOutput += "\n";
+        fileString += "\n";
         decrementTab();
-        writeToFile(fileOutput);
+        writeToFile(fileString);
     }
 
     public void incrementTab(){
@@ -96,11 +94,12 @@ public class vConverter {
         }
     }
 
-    public Integer getLocal(AllocationMap map){
+    public Integer getLocal(AllocationMap map, HashMap<String, Register> localMap){
         HashMap<String, Register> temp = map.registerHashMap;
         int max = 0;
         for(String s : temp.keySet()){
             if(temp.get(s).register.charAt(1) == 's'){
+                localMap.put(s, temp.get(s));
                 char c = temp.get(s).register.charAt(2);
                 int i = Character.getNumericValue(c);
                 max = Math.max(max, i+1);
@@ -109,9 +108,39 @@ public class vConverter {
         return max;
     }
 
+    public void printFuncLine(VFunction func, int in, int out, int local){
+        fileString += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]\n";
+        System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");
+        incrementTab();
+    }
+
+    public void printArgs(VFunction func, int in, int out, AllocationMap map, HashMap<String, Register> localMap){
+        //local -> in -> out
+        int i = 0;
+        for(String key: localMap.keySet()){
+            fileString += tab + "local[" + i + "] = " + localMap.get(key).register + "\n";
+            i++;
+        }
+        i = 0;
+        for(VVarRef.Local param :func.params){
+            String paramIdent = param.ident;
+            if(i < 4) {
+                if (map.registerHashMap.containsKey(paramIdent)) {
+                    fileString += tab + map.registerHashMap.get(paramIdent).register + String.format(" = $a%s\n", i);
+                }
+            }
+            else{
+                if (map.registerHashMap.containsKey(paramIdent)) {
+                    fileString += tab + map.registerHashMap.get(paramIdent).register + String.format(" = in[%s]\n", i);
+                }
+            }
+            i++;
+        }
+    }
+
     public void printLabels(VCodeLabel func){
         decrementTab();
-        fileOutput += func.ident + ":\n";
+        fileString += func.ident + ":\n";
         incrementTab();
     }
 
