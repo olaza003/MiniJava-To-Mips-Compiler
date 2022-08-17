@@ -49,20 +49,21 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
         String[] aRegisters = {"$a0", "$a1", "$a2", "$a3"};
         for(int i = 0;i < vCall.args.length; ++i){
             if(i < 4){
+                if(i != 0)
+                    output += tab;
                 if(map.registerHashMap.containsKey(vCall.args[i].toString())){
-                    if(i != 0)
-                        output += aRegisters[0] + " = " + vCall.args[i].toString() + "\n";
-                    else
-                        output += tab + aRegisters[0] + " = " + vCall.args[i].toString() + "\n";
+                    output += aRegisters[i] + " = " + map.registerHashMap.get(vCall.args[i].toString()).register + "\n";
                 }
-
-                else {
-                    output += tab + "out[" + Integer.toString(i - 4) + "] = ";
-                    if(map.registerHashMap.containsKey(vCall.args[i].toString()))
-                        output += map.registerHashMap.get(vCall.args[i].toString());
-                    else
-                        output += vCall.args[i].toString() + "\n";
+                else{
+                    output += aRegisters[i] + " = " + vCall.args[i].toString() + "\n";
                 }
+            }
+            else {
+                output += tab + "out[" + Integer.toString(i - 4) + "] = ";
+                if(map.registerHashMap.containsKey(vCall.args[i].toString()))
+                    output += map.registerHashMap.get(vCall.args[i].toString()) + "\n";
+                else
+                    output += vCall.args[i].toString() + "\n";
             }
         }
         return output;
@@ -113,12 +114,15 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
     @Override
     public String visit(VBranch vBranch) throws RuntimeException {
-        return null;
+        String ifValue = map.registerHashMap.get(vBranch.value.toString()).register;
+        String ifTarget = vBranch.target.toString();
+        String ifType = (vBranch.positive) ? "if" : "if0";
+        return ifType + " " + ifValue + " goto " + ifTarget;
     }
 
     @Override
     public String visit(VGoto vGoto) throws RuntimeException {
-        return null;
+        return "goto " + vGoto.target.toString();
     }
 
     @Override
