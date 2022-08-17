@@ -36,19 +36,20 @@ public class vConverter {
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
         //fileOutput += "func " + func.ident + "\n";
 
-        OutputVisit outputVisitor = new OutputVisit(map);
+        OutputVisit outputVisitor = new OutputVisit(map, tab);
         int local = getLocal(map);
         int in = func.params.length - 4;
         if(in < 0) in = 0;
         int out = 0;
 
-        fileOutput += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]";
+        fileOutput += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]\n";
         System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");
         incrementTab();
         for (VInstr vInstr : func.body) {
             String n = vInstr.accept(outputVisitor);
             fileOutput += tab + n + "\n";
         }
+        fileOutput += "\n";
         decrementTab();
         writeToFile(fileOutput);
     }
