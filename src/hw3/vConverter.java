@@ -1,8 +1,5 @@
 package hw3;
-import cs132.vapor.ast.VDataSegment;
-import cs132.vapor.ast.VFunction;
-import cs132.vapor.ast.VInstr;
-import cs132.vapor.ast.VOperand;
+import cs132.vapor.ast.*;
 
 import java.io.FileWriter;
 import java.util.HashMap;
@@ -41,6 +38,16 @@ public class vConverter {
         int in = func.params.length - 4;
         if(in < 0) in = 0;
         int out = 0;
+
+        //get the out value
+        for(VInstr node : func.body){
+            int holder = 0;
+            if(node instanceof VCall) {
+                VOperand[] v = ((VCall) node).args;
+                holder = v.length - 4;
+            }
+            if(out < holder) out = holder;
+        }
 
         fileOutput += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]\n";
         System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");

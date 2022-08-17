@@ -29,22 +29,6 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
     @Override
     public String visit(VCall vCall) throws RuntimeException {
-        /*String LHS = "";
-        String RHS = "";
-        Register varReg = map.registerHashMap.get(vCall.dest.toString());
-        LHS = varReg.register;
-        Register addrReg = map.registerHashMap.get(vCall.addr.toString());
-        RHS = "call " + addrReg.register + "(";
-        for(VOperand arg: vCall.args){
-            if(map.registerHashMap.containsKey(arg.toString())){
-                RHS += map.registerHashMap.get(arg.toString()).register;
-            }
-            else
-                RHS += arg.toString();
-            if(arg != vCall.args[vCall.args.length-1])
-                RHS += " ";
-        }
-        RHS += ")\n";*/
         String output = "";
         String[] aRegisters = {"$a0", "$a1", "$a2", "$a3"};
         for(int i = 0;i < vCall.args.length; ++i){
