@@ -27,7 +27,7 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
     @Override
     public String visit(VBuiltIn vBuiltIn) throws RuntimeException {
-        Register varReg = map.registerHashMap.get(vBuiltIn.dest.toString());
+        //Register varReg = map.registerHashMap.get(vBuiltIn.dest.toString());
 
         return null;
     }

@@ -5,6 +5,7 @@ import cs132.vapor.ast.VInstr;
 import cs132.vapor.ast.VOperand;
 
 import java.io.FileWriter;
+import java.util.HashMap;
 
 public class vConverter {
 
@@ -33,10 +34,17 @@ public class vConverter {
     }
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
-        fileOutput += "func " + func.ident + "\n";
-        incrementTab();
-        OutputVisit outputVisitor = new OutputVisit(map);
+        //fileOutput += "func " + func.ident + "\n";
 
+        OutputVisit outputVisitor = new OutputVisit(map);
+        int local = getLocal(map);
+        int in = func.params.length - 4;
+        if(in < 0) in = 0;
+        int out = 0;
+
+        fileOutput += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]";
+        System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");
+        incrementTab();
         for (VInstr vInstr : func.body) {
             String n = vInstr.accept(outputVisitor);
             fileOutput += tab + n + "\n";
@@ -62,6 +70,19 @@ public class vConverter {
         }catch (Exception e){
             System.out.println("file error");
         }
+    }
+
+    public Integer getLocal(AllocationMap map){
+        HashMap<String, Register> temp = map.registerHashMap;
+        int max = 0;
+        for(String s : temp.keySet()){
+            if(temp.get(s).register.charAt(1) == 's'){
+                char c = temp.get(s).register.charAt(2);
+                int i = Character.getNumericValue(c);
+                max = Math.max(max, i+1);
+            }
+        }
+        return max;
     }
 
 }
