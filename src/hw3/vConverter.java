@@ -32,7 +32,8 @@ public class vConverter {
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
         //fileOutput += "func " + func.ident + "\n";
-
+        int labelOffset = 0;
+        Boolean labelFinished = false;
 
         int local = getLocal(map);
         int in = func.params.length - 4;
@@ -49,12 +50,26 @@ public class vConverter {
             if(out < holder) out = holder;
         }
 
+
+
         fileOutput += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]\n";
         System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");
         incrementTab();
         OutputVisit outputVisitor = new OutputVisit(map, tab);
-        for (VInstr vInstr : func.body) {
+        for (int i = 0; i < func.body.length; ++i) {
+            VInstr vInstr = func.body[i];
+            if(func.labels.length != 0 && !labelFinished) {
+                if (i == func.labels[i - labelOffset].instrIndex) {
+                    printLabels(func.labels[i - labelOffset]);
+                    if((i-labelOffset) == (func.labels.length-1))
+                        labelFinished = true;
+                }
+                else
+                    labelOffset++;
+
+            }
             String n = vInstr.accept(outputVisitor);
+
             fileOutput += tab + n + "\n";
         }
         fileOutput += "\n";
@@ -92,6 +107,12 @@ public class vConverter {
             }
         }
         return max;
+    }
+
+    public void printLabels(VCodeLabel func){
+        decrementTab();
+        fileOutput += func.ident + ":\n";
+        incrementTab();
     }
 
 }
