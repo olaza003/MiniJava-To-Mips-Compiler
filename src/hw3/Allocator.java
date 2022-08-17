@@ -18,6 +18,7 @@ public class Allocator {
     public HashMap<String, Register> regHashMap = new HashMap<>();
 
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
+        regHashMap = new HashMap<>();
         regPool = new RegisterPool(registers, sRegisters);
         active = new ArrayList<>();
         intervalStack = new ArrayList<>();
