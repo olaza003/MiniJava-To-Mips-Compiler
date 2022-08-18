@@ -47,7 +47,7 @@ public class IntervalVisit extends VInstr.VisitorR<Nodes, RuntimeException> {
         String callAddr = node.addr.toString();
         temp2.add(callAddr);
         Nodes n = new Nodes(temp1, temp2);
-        //n.calle = true;
+        n.calle = true;
         return n;
     }
 
@@ -79,12 +79,13 @@ public class IntervalVisit extends VInstr.VisitorR<Nodes, RuntimeException> {
     public Nodes visit(VMemWrite node) throws RuntimeException {
         List<String> temp1 = new ArrayList<>();
         //VMemRef.Global dest = (VMemRef.Global)node.dest;
-        String dest = ((VMemRef.Global)node.dest).base.toString();
-        if(dest != null && Character.isLetter(dest.charAt(0))){
-            temp1.add(dest);
-        }
 
         List<String> temp2 = new ArrayList<>();
+        String dest = ((VMemRef.Global)node.dest).base.toString();
+        if(dest != null && Character.isLetter(dest.charAt(0))){
+            //temp1.add(dest);
+            temp2.add(dest);
+        }
         String source = node.source.toString();
         if(source != null && Character.isLetter(source.charAt(0))){
             temp2.add(source);

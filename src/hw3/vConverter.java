@@ -32,9 +32,14 @@ public class vConverter {
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
         //fileString += "func " + func.ident + "\n";
-        HashMap<Integer, String> labelMap = new HashMap<>();
+        /*HashMap<Integer, String> labelMap = new HashMap<>();
         for(VCodeLabel label: func.labels){
             labelMap.put(label.instrIndex, label.ident);
+        }*/
+        HashMap<Integer, Set<String>> labelMap = new HashMap<>();
+        for(VCodeLabel label: func.labels){
+            //labelMap.put(label.instrIndex, label.ident);
+            labelMap.computeIfAbsent(label.instrIndex, k -> new LinkedHashSet<>()).add(label.ident);
         }
 
         int local = getLocal(map);
@@ -59,8 +64,16 @@ public class vConverter {
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
 
-            if(labelMap.containsKey(i))
-                printLabels(labelMap.get(i));
+            /*if(labelMap.containsKey(i))
+                printLabels(labelMap.get(i));*/
+
+            if(labelMap.containsKey(i)) {
+                for(String s: labelMap.get(i)){
+                    fileString += s + ":\n";
+                }
+                //labelMap.get(i).forEach(l -> String.format(l+":\n"));
+                //printLabels(labelMap.get(i));
+            }
 
             String n = vInstr.accept(outputVisitor);
 

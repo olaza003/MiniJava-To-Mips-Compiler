@@ -1,5 +1,6 @@
 package hw3;
 
+import cs132.vapor.ast.VCall;
 import cs132.vapor.ast.VInstr;
 
 import java.sql.SQLOutput;
@@ -18,6 +19,8 @@ public class FlowGraphNode{
     public Integer instruction;
     public Nodes functionNode;
 
+    public boolean callee = false;
+
     public VInstr vi;
 
     public FlowGraphNode(Nodes n, Integer lineNum){
@@ -34,6 +37,7 @@ public class FlowGraphNode{
         def = d;
         use = src;
         vi = v;
+        if(v instanceof VCall) callee = true;
     }
 
     public List<String> removeDuplicate(List<String> in, List<String> out){

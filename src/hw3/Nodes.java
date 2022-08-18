@@ -3,7 +3,7 @@ package hw3;
 import java.util.*;
 
 public class Nodes {
-    private String ifLabel, gotoLabel; //if, goTo
+    public String ifLabel, gotoLabel; //if, goTo
     public List<String> destination; //VVarRef
     public List<String> sources; //VOperand
 
@@ -19,10 +19,12 @@ public class Nodes {
     public String getGotoLabel(){return gotoLabel;}
 
     public Boolean ifLabelEmpty(){
-        return ifLabel == null;
+        if(ifLabel == null) return true;
+        else return false;
     }
 
     public Boolean gotoLabelEmpty(){
-        return gotoLabel == null;
+        if(gotoLabel == null)return true;
+        else return false;
     }
 }
