@@ -32,19 +32,7 @@ public class vConverter {
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
         //fileString += "func " + func.ident + "\n";
-        HashMap<Integer, List<String>> labelMap = new HashMap<>();
-        for (VCodeLabel l : func.labels) {
-            List<String> temp = new ArrayList<>();
-            if(!labelMap.containsKey(l.instrIndex)) {  //if key in label hashmap isnt within hashmap
-                temp.add(l.ident);
-                labelMap.put(l.instrIndex, temp);
-            }
-            else{ //if key is found, means that there is another label at that instruction index and append to that list
-                temp = new ArrayList<>(labelMap.get(l.instrIndex));
-                temp.add(l.ident);
-                labelMap.put(l.instrIndex, temp);
-            }
-        }
+        HashMap<Integer, List<String>> labelMap = labelGetter(func);
 
         int local = getLocal(map);
         int in = func.params.length - 4;
@@ -67,15 +55,10 @@ public class vConverter {
         OutputVisit outputVisitor = new OutputVisit(map, tab, local);
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
+            printLabels(labelMap, i);
+            String visitOutput = vInstr.accept(outputVisitor);
 
-            if(labelMap.containsKey(i)) {
-                for(String s: labelMap.get(i)){
-                    fileString += s + ":\n";
-                }
-            }
-            String n = vInstr.accept(outputVisitor);
-
-            fileString += tab + n + "\n";
+            fileString += tab + visitOutput + "\n";
         }
         fileString += "\n";
         decrementTab();
@@ -146,7 +129,28 @@ public class vConverter {
             i++;
         }
     }
-    public void printLabels(String label){
-        fileString += label + ":\n";
+    public HashMap<Integer, List<String>> labelGetter(VFunction func){
+        HashMap<Integer, List<String>> labelMap = new HashMap<>();
+        for (VCodeLabel l : func.labels) {
+            List<String> temp = new ArrayList<>();
+            if(!labelMap.containsKey(l.instrIndex)) {  //if key in label hashmap isnt within hashmap
+                temp.add(l.ident);
+                labelMap.put(l.instrIndex, temp);
+            }
+            else{ //if key is found, means that there is another label at that instruction index and append to that list
+                temp = new ArrayList<>(labelMap.get(l.instrIndex));
+                temp.add(l.ident);
+                labelMap.put(l.instrIndex, temp);
+            }
+        }
+        return labelMap;
+    }
+
+    public void printLabels(HashMap<Integer, List<String>> labelMap, int key){
+        if(labelMap.containsKey(key)) {
+            for(String s: labelMap.get(key)){
+                fileString += s + ":\n";
+            }
+        }
     }
 }

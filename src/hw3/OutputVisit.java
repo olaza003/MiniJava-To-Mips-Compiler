@@ -34,8 +34,8 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
     public String visit(VCall vCall) throws RuntimeException {
         String output = "";
         String[] aRegisters = {"$a0", "$a1", "$a2", "$a3"};
-        for(int i = 0;i < vCall.args.length; ++i){
-            if(i < 4){
+        for(int i = 0; i < vCall.args.length; ++i){
+            if(i < 4){  //store parameters in $a registers up to 4
                 if(i != 0)
                     output += tab;
                 if(map.registerHashMap.containsKey(vCall.args[i].toString())){
@@ -45,7 +45,7 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
                     output += aRegisters[i] + " = " + vCall.args[i].toString() + "\n";
                 }
             }
-            else {
+            else {  //when # of parameters > 4
                 output += tab + "out[" + Integer.toString(i - 4) + "] = ";
                 if(map.registerHashMap.containsKey(vCall.args[i].toString()))
                     output += map.registerHashMap.get(vCall.args[i].toString()).register + "\n";
@@ -53,10 +53,11 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
                     output += vCall.args[i].toString() + "\n";
             }
         }
-        if(vCall.addr instanceof VAddr.Label)
-            output += tab + "call " + vCall.addr.toString() + "\n";
-        else
-            output += tab + "call " + map.registerHashMap.get(vCall.addr.toString()).register + "\n";
+
+        String labelInstanceOf = (vCall.addr instanceof VAddr.Label) ? vCall.addr.toString() :
+                map.registerHashMap.get(vCall.addr.toString()).register;
+
+        output += tab + "call " + labelInstanceOf + "\n";
 
         String getter = map.registerHashMap.get(vCall.dest.toString()).register;
         if(getter != null){
