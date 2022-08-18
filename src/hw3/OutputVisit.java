@@ -57,6 +57,12 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
             output += tab + "call " + vCall.addr.toString() + "\n";
         else
             output += tab + "call " + map.registerHashMap.get(vCall.addr.toString()).register + "\n";
+
+        String getter = map.registerHashMap.get(vCall.dest.toString()).register;
+        if(getter != null){
+            output += tab + getter + " = $v0";
+        }
+
         //output += tab + map.registerHashMap.get(vCall.dest.toString()).register + " = $v0"; //fix
         return output;
     }
@@ -114,11 +120,16 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
         Register src = map.registerHashMap.get(((VMemRef.Global)vMemRead.source).base.toString());
         String LHS = dest.register;
         String RHS = String.format("[%s", src.register);
-        if(dest.register.equals(src.register)){
+        int offset = ((VMemRef.Global)vMemRead.source).byteOffset;
+        if(offset > 0){
+            RHS += "+" + offset + "]";
+        }
+        else{RHS += "]";}
+        /*if(dest.register.equals(src.register)){
             RHS += String.format("+%d]", ((VMemRef.Global)vMemRead.source).byteOffset);
         }
         else
-            RHS += "]";
+            RHS += "]";*/
         return LHS + " = " + RHS;
     }
 
@@ -155,7 +166,7 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
         for(i = 0; i < local; i++)
         {
-            output += "$" + i + " = local[" + i + "]\n" + tab;
+            output += "$s" + i + " = local[" + i + "]\n" + tab;
         }
         return output + "ret";
     }
