@@ -32,9 +32,18 @@ public class vConverter {
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
         //fileString += "func " + func.ident + "\n";
-        HashMap<Integer, String> labelMap = new HashMap<>();
-        for(VCodeLabel label: func.labels){
-            labelMap.put(label.instrIndex, label.ident);
+        HashMap<Integer, List<String>> labelMap = new HashMap<>();
+        for (VCodeLabel l : func.labels) {
+            List<String> temp = new ArrayList<>();
+            if(!labelMap.containsKey(l.instrIndex)) {  //if key in label hashmap isnt within hashmap
+                temp.add(l.ident);
+                labelMap.put(l.instrIndex, temp);
+            }
+            else{ //if key is found, means that there is another label at that instruction index and append to that list
+                temp = new ArrayList<>(labelMap.get(l.instrIndex));
+                temp.add(l.ident);
+                labelMap.put(l.instrIndex, temp);
+            }
         }
 
         int local = getLocal(map);
@@ -53,15 +62,17 @@ public class vConverter {
         }
 
         printFuncLine(func, in, out, local);
-        printArgs(func, map);
+        printArgs(func, map, local);
 
-        OutputVisit outputVisitor = new OutputVisit(map, tab);
+        OutputVisit outputVisitor = new OutputVisit(map, tab, local);
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
 
-            if(labelMap.containsKey(i))
-                printLabels(labelMap.get(i));
-
+            if(labelMap.containsKey(i)) {
+                for(String s: labelMap.get(i)){
+                    fileString += s + ":\n";
+                }
+            }
             String n = vInstr.accept(outputVisitor);
 
             fileString += tab + n + "\n";
@@ -110,14 +121,15 @@ public class vConverter {
         incrementTab();
     }
 
-    public void printArgs(VFunction func, AllocationMap map){
+    public void printArgs(VFunction func, AllocationMap map, int local){
         //local -> in -> out
-        int i = 0;
-        for(String key: map.localMap.keySet()){
-            fileString += tab + "local[" + i + "] = " + map.localMap.get(key).register + "\n";
-            i++;
+        if(local > 0){
+            for(int i = 0; i < local; i++){
+                fileString += tab + "local[" + i + "] = $s" + i + "\n";
+            }
         }
-        i = 0;
+
+        int i = 0;
         int var = 0;
         for(VVarRef.Local param :func.params){
             String paramIdent = param.ident;

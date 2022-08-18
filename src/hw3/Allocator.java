@@ -34,14 +34,10 @@ public class Allocator {
             }
             sortIntervalList(active, false);
         }
-        AllocationMap temp = new AllocationMap(regHashMap);
+        AllocationMap temp = new AllocationMap(regHashMap, intervalStack);
         System.out.println("temp map: ");
         HashMap<String, Register> t = temp.registerHashMap;
         System.out.println("{");
-        for(String str : t.keySet()){
-            System.out.printf(str + "=" + t.get(str).register + ", ");
-
-        }
         return temp;
     }
 
