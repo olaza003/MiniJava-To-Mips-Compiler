@@ -53,9 +53,9 @@ public class vConverter {
         }
 
         printFuncLine(func, in, out, local);
-        printArgs(func, map);
+        printArgs(func, map, local);
 
-        OutputVisit outputVisitor = new OutputVisit(map, tab);
+        OutputVisit outputVisitor = new OutputVisit(map, tab, local);
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
 
@@ -110,14 +110,12 @@ public class vConverter {
         incrementTab();
     }
 
-    public void printArgs(VFunction func, AllocationMap map){
+    public void printArgs(VFunction func, AllocationMap map, int local){
         //local -> in -> out
-        int i = 0;
-        for(String key: map.localMap.keySet()){
-            fileString += tab + "local[" + i + "] = " + map.localMap.get(key).register + "\n";
-            i++;
+        for(int k = 0; k < local; k++){
+            fileString += tab + "local[" +k + "] = $s" + k + "\n";
         }
-        i = 0;
+        int i = 0;
         int var = 0;
         for(VVarRef.Local param :func.params){
             String paramIdent = param.ident;
