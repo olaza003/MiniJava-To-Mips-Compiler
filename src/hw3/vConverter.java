@@ -36,7 +36,7 @@ public class vConverter {
         for(VCodeLabel label: func.labels){
             labelMap.put(label.instrIndex, label.ident);
         }
-        boolean labelFinished = false;
+
         int local = getLocal(map);
         int in = func.params.length - 4;
         if(in < 0) in = 0;
@@ -53,33 +53,14 @@ public class vConverter {
         }
 
         printFuncLine(func, in, out, local);
-        printArgs(func, in, out, map);
-
+        printArgs(func, map);
 
         OutputVisit outputVisitor = new OutputVisit(map, tab);
-
-        int mostRecentLine = 0;
-        int labelCounter = 0;
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
-            /*mostRecentLine = vInstr.sourcePos.line;
-            if(func.labels.length != 0 && !labelFinished) {
-                if(mostRecentLine == (func.labels[labelCounter].sourcePos.line-1)){
-                    printLabels(func.labels[labelCounter]);
-                    mostRecentLine = func.labels[labelCounter].sourcePos.line;
-                    if(labelCounter == (func.labels.length-1))
-                        labelFinished = true;
-                }
-                *//*if (i == func.labels[i - labelOffset].instrIndex) {
-                    printLabels(func.labels[i - labelOffset]);
-                    if((i-labelOffset) == (func.labels.length-1))
-                        labelFinished = true;
-                }
-                else
-                    labelOffset++;*//*
-            }*/
 
-            //if(labelMap.containsKey())
+            if(labelMap.containsKey(i))
+                printLabels(labelMap.get(i));
 
             String n = vInstr.accept(outputVisitor);
 
@@ -129,7 +110,7 @@ public class vConverter {
         incrementTab();
     }
 
-    public void printArgs(VFunction func, int in, int out, AllocationMap map){
+    public void printArgs(VFunction func, AllocationMap map){
         //local -> in -> out
         int i = 0;
         for(String key: map.localMap.keySet()){
@@ -153,29 +134,7 @@ public class vConverter {
             i++;
         }
     }
-
-    public void restoreSavedReg(HashMap<String, Register> localMap){
-        int i = 0;
-        for(String key: localMap.keySet()){
-            fileString += tab + localMap.get(key).register + " = local[" + i + "]" + "\n";
-            i++;
-        }
+    public void printLabels(String label){
+        fileString += label + ":\n";
     }
-
-    public HashMap<String, Register> getCalleeSavedReg(AllocationMap map){
-        HashMap<String, Register> calleeReg = new HashMap<>();
-        for(String key: map.registerHashMap.keySet()){
-            if(map.registerHashMap.get(key).register.charAt(1) == 's')
-                calleeReg.put(key, map.registerHashMap.get(key));
-        }
-
-        return calleeReg;
-    }
-
-    public void printLabels(VCodeLabel func){
-        decrementTab();
-        fileString += func.ident + ":\n";
-        incrementTab();
-    }
-
 }
