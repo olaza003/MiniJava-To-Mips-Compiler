@@ -35,7 +35,8 @@ public class vConverter {
         int labelOffset = 0;
         boolean labelFinished = false;
         HashMap<String, Register> localMap = new HashMap<>();
-        int local = getLocal(map, localMap);
+        HashMap<String, Register> calleeRegs = getCalleeSavedReg(map);
+        int local = getLocal(map);
         int in = func.params.length - 4;
         if(in < 0) in = 0;
         int out = 0;
@@ -51,7 +52,7 @@ public class vConverter {
         }
 
         printFuncLine(func, in, out, local);
-        printArgs(func, in, out, map, localMap);
+        printArgs(func, in, out, map);
 
         OutputVisit outputVisitor = new OutputVisit(map, tab);
         for (int i = 0; i < func.body.length; ++i) {
@@ -94,12 +95,12 @@ public class vConverter {
         }
     }
 
-    public Integer getLocal(AllocationMap map, HashMap<String, Register> localMap){
+    public Integer getLocal(AllocationMap map){
         HashMap<String, Register> temp = map.registerHashMap;
         int max = 0;
         for(String s : temp.keySet()){
             if(temp.get(s).register.charAt(1) == 's'){
-                localMap.put(s, temp.get(s));
+                map.localMap.put(s, temp.get(s));
                 char c = temp.get(s).register.charAt(2);
                 int i = Character.getNumericValue(c);
                 max = Math.max(max, i+1);
@@ -114,11 +115,11 @@ public class vConverter {
         incrementTab();
     }
 
-    public void printArgs(VFunction func, int in, int out, AllocationMap map, HashMap<String, Register> localMap){
+    public void printArgs(VFunction func, int in, int out, AllocationMap map){
         //local -> in -> out
         int i = 0;
-        for(String key: localMap.keySet()){
-            fileString += tab + "local[" + i + "] = " + localMap.get(key).register + "\n";
+        for(String key: map.localMap.keySet()){
+            fileString += tab + "local[" + i + "] = " + map.localMap.get(key).register + "\n";
             i++;
         }
         i = 0;
@@ -137,6 +138,24 @@ public class vConverter {
             }
             i++;
         }
+    }
+
+    public void restoreSavedReg(HashMap<String, Register> localMap){
+        int i = 0;
+        for(String key: localMap.keySet()){
+            fileString += tab + localMap.get(key).register + " = local[" + i + "]" + "\n";
+            i++;
+        }
+    }
+
+    public HashMap<String, Register> getCalleeSavedReg(AllocationMap map){
+        HashMap<String, Register> calleeReg = new HashMap<>();
+        for(String key: map.registerHashMap.keySet()){
+            if(map.registerHashMap.get(key).register.charAt(1) == 's')
+                calleeReg.put(key, map.registerHashMap.get(key));
+        }
+
+        return calleeReg;
     }
 
     public void printLabels(VCodeLabel func){

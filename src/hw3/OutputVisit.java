@@ -52,7 +52,7 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
             }
         }
         output += tab + "call " + map.registerHashMap.get(vCall.addr.toString()).register + "\n";
-        output += tab + map.registerHashMap.get(vCall.addr.toString()).register + " = $v0";
+        output += tab + map.registerHashMap.get(vCall.addr.toString()).register + " = $v0"; //fix
         return output;
     }
 
@@ -101,7 +101,7 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
         String LHS = dest.register;
         String RHS = String.format("[%s", src.register);
         if(dest.register.equals(src.register)){
-            RHS += String.format(" + %d]", ((VMemRef.Global)vMemRead.source).byteOffset);
+            RHS += String.format("+%d]", ((VMemRef.Global)vMemRead.source).byteOffset);
         }
         else
             RHS += "]";
@@ -128,8 +128,16 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
             String retValue = (map.registerHashMap.containsKey(vReturn.value.toString())) ?
                             map.registerHashMap.get(vReturn.value.toString()).register :
                             vReturn.value.toString();
-            output += "$v0 = " + retValue + "\n" + tab;
+            output += "$v0 = " + retValue + "\n";
         }
-        return output + "ret";
+
+        int i = 0;
+        if(map.localMap != null) {
+            for (String key : map.localMap.keySet()) {
+                String calleeRegister = map.localMap.get(key).register;
+                output += tab + calleeRegister + " = local[" + i++ + "]\n";
+            }
+        }
+        return output + tab + "ret";
     }
 }
