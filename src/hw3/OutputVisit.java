@@ -12,10 +12,12 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
     public AllocationMap map;
     public String tab;
+    public int local;
 
-    public OutputVisit(AllocationMap m, String indent){
+    public OutputVisit(AllocationMap m, String indent, int l){
         map = m;
         tab = indent;
+        local = l;
     }
 
     @Override
@@ -144,11 +146,16 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
         }
 
         int i = 0;
-        if(map.localMap != null) {
+        /*if(map.localMap != null) {
             for (String key : map.localMap.keySet()) {
                 String calleeRegister = map.localMap.get(key).register;
                 output += tab + calleeRegister + " = local[" + i++ + "]\n" + tab;
             }
+        }*/
+
+        for(i = 0; i < local; i++)
+        {
+            output += "$" + i + " = local[" + i + "]\n" + tab;
         }
         return output + "ret";
     }
