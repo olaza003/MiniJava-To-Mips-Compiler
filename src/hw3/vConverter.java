@@ -32,10 +32,11 @@ public class vConverter {
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
         //fileString += "func " + func.ident + "\n";
-        int labelOffset = 0;
+        HashMap<Integer, String> labelMap = new HashMap<>();
+        for(VCodeLabel label: func.labels){
+            labelMap.put(label.instrIndex, label.ident);
+        }
         boolean labelFinished = false;
-        HashMap<String, Register> localMap = new HashMap<>();
-        HashMap<String, Register> calleeRegs = getCalleeSavedReg(map);
         int local = getLocal(map);
         int in = func.params.length - 4;
         if(in < 0) in = 0;
@@ -54,19 +55,32 @@ public class vConverter {
         printFuncLine(func, in, out, local);
         printArgs(func, in, out, map);
 
+
         OutputVisit outputVisitor = new OutputVisit(map, tab);
+
+        int mostRecentLine = 0;
+        int labelCounter = 0;
         for (int i = 0; i < func.body.length; ++i) {
             VInstr vInstr = func.body[i];
+            /*mostRecentLine = vInstr.sourcePos.line;
             if(func.labels.length != 0 && !labelFinished) {
-                if (i == func.labels[i - labelOffset].instrIndex) {
+                if(mostRecentLine == (func.labels[labelCounter].sourcePos.line-1)){
+                    printLabels(func.labels[labelCounter]);
+                    mostRecentLine = func.labels[labelCounter].sourcePos.line;
+                    if(labelCounter == (func.labels.length-1))
+                        labelFinished = true;
+                }
+                *//*if (i == func.labels[i - labelOffset].instrIndex) {
                     printLabels(func.labels[i - labelOffset]);
                     if((i-labelOffset) == (func.labels.length-1))
                         labelFinished = true;
                 }
                 else
-                    labelOffset++;
+                    labelOffset++;*//*
+            }*/
 
-            }
+            //if(labelMap.containsKey())
+
             String n = vInstr.accept(outputVisitor);
 
             fileString += tab + n + "\n";

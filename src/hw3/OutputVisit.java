@@ -51,8 +51,11 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
                     output += vCall.args[i].toString() + "\n";
             }
         }
-        output += tab + "call " + map.registerHashMap.get(vCall.addr.toString()).register + "\n";
-        output += tab + map.registerHashMap.get(vCall.addr.toString()).register + " = $v0"; //fix
+        if(vCall.addr instanceof VAddr.Label)
+            output += tab + "call " + vCall.addr.toString() + "\n";
+        else
+            output += tab + "call " + map.registerHashMap.get(vCall.addr.toString()).register + "\n";
+        output += tab + map.registerHashMap.get(vCall.dest.toString()).register + " = $v0"; //fix
         return output;
     }
 
@@ -89,8 +92,17 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
         String LHS = "";
         String RHS = "";
         Register dest = map.registerHashMap.get(((VMemRef.Global)vMemWrite.dest).base.toString());
-        LHS = String.format("[%s]", dest.register);
-        RHS = vMemWrite.source.toString();
+        int offset = ((VMemRef.Global)vMemWrite.dest).byteOffset;
+        if(offset > 0){
+            LHS = "[" + dest.register + "+" + offset + "]";
+        }
+        else LHS = String.format("[%s]", dest.register);
+
+        //LHS = String.format("[%s]", dest.register);
+        if(map.registerHashMap.containsKey(vMemWrite.source.toString()))
+            RHS = map.registerHashMap.get(vMemWrite.source.toString()).register;
+        else
+            RHS = vMemWrite.source.toString();
         return LHS + " = " + RHS;
     }
 
@@ -128,16 +140,16 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
             String retValue = (map.registerHashMap.containsKey(vReturn.value.toString())) ?
                             map.registerHashMap.get(vReturn.value.toString()).register :
                             vReturn.value.toString();
-            output += "$v0 = " + retValue + "\n";
+            output += "$v0 = " + retValue + "\n" + tab;
         }
 
         int i = 0;
         if(map.localMap != null) {
             for (String key : map.localMap.keySet()) {
                 String calleeRegister = map.localMap.get(key).register;
-                output += tab + calleeRegister + " = local[" + i++ + "]\n";
+                output += tab + calleeRegister + " = local[" + i++ + "]\n" + tab;
             }
         }
-        return output + tab + "ret";
+        return output + "ret";
     }
 }
