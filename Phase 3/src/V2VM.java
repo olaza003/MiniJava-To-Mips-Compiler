@@ -7,7 +7,6 @@ import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
 
 import java.io.*;
-
 import java.util.*;
 
 import HelperFiles.*;
