@@ -1,5 +1,6 @@
 package HelperFiles;
 
+import cs132.vapor.ast.VCall;
 import cs132.vapor.ast.VInstr;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class FlowGraphNode{
     public List<String> def;
     public Integer instruction;
     public Nodes functionNode;
+
+    public boolean callee = false;
 
     public VInstr vi;
 
@@ -32,6 +35,7 @@ public class FlowGraphNode{
         def = d;
         use = src;
         vi = v;
+        if(v instanceof VCall) callee = true;
     }
 
     public List<String> removeDuplicate(List<String> in, List<String> out){

@@ -1,11 +1,13 @@
 package HelperFiles;
 
+import cs132.vapor.ast.VInstr;
+
 public class IntervalNode {
     public int start;
     public int end;
     public int location;
     public String variable;
-
+    public boolean holder;
     public boolean calle = false;
 
     public IntervalNode(int startTime, String varName){
@@ -14,6 +16,12 @@ public class IntervalNode {
     }
 
     public IntervalNode(int startTime, int endTime, String varName){
+        start = startTime;
+        end = endTime;
+        variable = varName;
+    }
+
+    public IntervalNode(int startTime, int endTime, String varName, VInstr v){
         start = startTime;
         end = endTime;
         variable = varName;

@@ -120,11 +120,6 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
             RHS += "+" + offset + "]";
         }
         else{RHS += "]";}
-        /*if(dest.register.equals(src.register)){
-            RHS += String.format("+%d]", ((VMemRef.Global)vMemRead.source).byteOffset);
-        }
-        else
-            RHS += "]";*/
         return LHS + " = " + RHS;
     }
 
@@ -152,12 +147,6 @@ public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
         }
 
         int i = 0;
-        /*if(map.localMap != null) {
-            for (String key : map.localMap.keySet()) {
-                String calleeRegister = map.localMap.get(key).register;
-                output += tab + calleeRegister + " = local[" + i++ + "]\n" + tab;
-            }
-        }*/
 
         for(i = 0; i < local; i++)
         {
