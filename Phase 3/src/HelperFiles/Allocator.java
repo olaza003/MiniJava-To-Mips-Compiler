@@ -1,4 +1,4 @@
-package hw3;
+package HelperFiles;
 
 import cs132.vapor.ast.VVarRef;
 
@@ -8,8 +8,8 @@ public class Allocator {
     public List<IntervalNode> active;
 
     public RegisterPool regPool;
-    public String[] registers = {"$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$s0", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", "$s7"};
-    //
+    public String[] registers = {"$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8"};// "$s0", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", "$s7"};
+
     public String[] sRegisters = {"$s0", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", "$s7"};
 
 
@@ -26,7 +26,7 @@ public class Allocator {
         sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
-            if(active.size() == regPool.allRegisters.size()) //
+            if(active.size() == regPool.allRegisters.size())
                 spillAtInterval(i);
             else {
                 regHashMap.put(i.variable, regPool.getRegister(i));
@@ -35,9 +35,7 @@ public class Allocator {
             sortIntervalList(active, false);
         }
         AllocationMap temp = new AllocationMap(regHashMap, intervalStack);
-        System.out.println("temp map: ");
         HashMap<String, Register> t = temp.registerHashMap;
-        System.out.println("{");
         return temp;
     }
 
@@ -54,7 +52,6 @@ public class Allocator {
     }
 
     public void spillAtInterval(IntervalNode i){
-        System.out.println("Active size: " + active.size());
         IntervalNode spill = active.get(active.size() - 1);
         if(spill.end > i.end){
             regHashMap.put(i.variable, regHashMap.get(spill.variable));

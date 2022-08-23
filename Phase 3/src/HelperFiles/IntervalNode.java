@@ -1,4 +1,4 @@
-package hw3;
+package HelperFiles;
 
 public class IntervalNode {
     public int start;

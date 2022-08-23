@@ -1,4 +1,4 @@
-package hw3;
+package HelperFiles;
 import cs132.vapor.ast.*;
 
 import java.io.FileWriter;
@@ -31,7 +31,6 @@ public class vConverter {
     }
 
     public void outputFunction(VFunction func, AllocationMap map, Liveness liveness){
-        //fileString += "func " + func.ident + "\n";
         HashMap<Integer, List<String>> labelMap = labelGetter(func);
 
         int local = getLocal(map);
@@ -62,7 +61,6 @@ public class vConverter {
         }
         fileString += "\n";
         decrementTab();
-        writeToFile(fileString);
     }
 
     public void incrementTab(){
@@ -72,16 +70,6 @@ public class vConverter {
     public void decrementTab(){
         int decrease = tab.length() - 2;
         tab = tab.substring(0, decrease);
-    }
-
-    public void writeToFile(String output){
-        try {
-            outputFile = new FileWriter("src\\P.vaporm");
-            outputFile.write(output);
-            outputFile.close();
-        }catch (Exception e){
-            System.out.println("file error");
-        }
     }
 
     public Integer getLocal(AllocationMap map){
@@ -100,7 +88,6 @@ public class vConverter {
 
     public void printFuncLine(VFunction func, int in, int out, int local){
         fileString += "func " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]\n";
-        System.out.println("\nfunc " + func.ident + " [in " + in + ", out " + out + ", local " + local + "]");
         incrementTab();
     }
 

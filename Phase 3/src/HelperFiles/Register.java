@@ -1,6 +1,4 @@
-package hw3;
-
-import java.util.*;
+package HelperFiles;
 
 public class Register {
     public String register;
@@ -16,7 +14,6 @@ public class Register {
     }
 
     public Register(String reg){register = reg;}
-
 
 
 }

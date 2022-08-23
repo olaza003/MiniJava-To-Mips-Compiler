@@ -1,11 +1,9 @@
-package hw3;
+package HelperFiles;
 
 import cs132.vapor.ast.VInstr;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class FlowGraphNode{
     public List<FlowGraphNode> succNode; //successor node

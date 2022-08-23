@@ -1,12 +1,6 @@
-package hw3;
+package HelperFiles;
 
 import cs132.vapor.ast.*;
-
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 public class OutputVisit extends VInstr.VisitorR<String, RuntimeException> {
 
