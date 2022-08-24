@@ -8,13 +8,17 @@ import java.io.*;
 import java.util.*;
 
 public class VM2M {
-
     public static void main(String[] args) {
         processStream(System.in);
     }
 
     public static void processStream(InputStream var0) {
-        System.out.println("hello world");
+        try{
+            VaporProgram var1 = parseVapor(System.in, System.err);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
