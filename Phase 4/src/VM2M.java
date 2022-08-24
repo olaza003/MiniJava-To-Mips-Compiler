@@ -19,7 +19,7 @@ public class VM2M {
             System.out.println("Hello world");
             Printer print = new Printer();
 
-            System.out.println(program.dataSegments);
+            //System.out.println(program.dataSegments);
             String str = print.printDataSeg(program.dataSegments);
             System.out.println(str);
             ////System.out.println(program.functions.);

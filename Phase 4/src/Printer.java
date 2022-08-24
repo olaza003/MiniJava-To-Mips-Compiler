@@ -44,9 +44,6 @@ public class Printer {
         dataFunc += ident + "move $fp $sp\n";
         dataFunc += ident + "subu $sp $sp " + Integer.toString((func.stack.out + func.stack.local + 2)*4) + "\n";
         dataFunc += ident + "sw $r -4($fp)\n";
-        /*for(VCodeLabel label : func.labels){
-            System.out.println(label.instrIndex + ": " + label.ident);
-        }*/
 
         for(int i = 0; i < funcBody.length; i++){
             VInstr node = funcBody[i];
