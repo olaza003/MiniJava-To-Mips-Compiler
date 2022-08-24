@@ -24,8 +24,10 @@ public class VM2M {
             System.out.println(str);
             ////System.out.println(program.functions.);
             for (VFunction func : program.functions) {
-
+                String s = print.printFunction(func);
+                System.out.print(s);
             }
+            System.out.println(print.printEnd());
         }
         catch (Exception e){
             System.out.println("Type error");
