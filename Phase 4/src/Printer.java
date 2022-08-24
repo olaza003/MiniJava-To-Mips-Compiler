@@ -47,11 +47,21 @@ public class Printer {
             System.out.println(label.instrIndex + ": " + label.ident);
         }
 
+        decreaseIdent();//inside Visitor class it does ident already
+        int labelCount = 0;
         for(int i = 0; i < funcBody.length; i++){
             VInstr node = funcBody[i];
-            String s = node.accept(visit);
+            if(labelCount < func.labels.length ) {
+                if (func.labels[labelCount].instrIndex == i - 1) {
+                    dataFunc += func.labels[labelCount].ident + ":\n";
+                    labelCount++;
+                }
+            }
+            dataFunc += node.accept(visit);
+
             //System.out.println(node);
         }
+        increaseIdent();
 
         dataFunc += ident + "lw $ra -4($fp)\n";
         dataFunc += ident + "lw $fp -8($fp)\n";
