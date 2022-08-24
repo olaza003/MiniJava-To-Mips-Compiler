@@ -1,12 +1,14 @@
-package hw3;
+package HelperFiles;
+
+import cs132.vapor.ast.VInstr;
 
 import java.util.*;
 
 public class FlowGraph {
     public List<FlowGraphNode> nodesList = new ArrayList<>();
 
-    public void addGraphNode(Nodes n, Integer lineNum, List<String> d, List<String> src){
-        nodesList.add(new FlowGraphNode(n, lineNum, d, src));
+    public void addGraphNode(Nodes n, Integer lineNum, List<String> d, List<String> src, VInstr v){
+        nodesList.add(new FlowGraphNode(n, lineNum, d, src, v));
     }
 
     public void addGraphEdge(FlowGraphNode prevNode, FlowGraphNode nextNode){
@@ -53,15 +55,10 @@ public class FlowGraph {
 
                 n.in = temp;
                 n.out = temp2;
-                inList.add(n.in);
-                outList.add(n.out);
-                defList.add(n.def);
-                useList.add(n.use);
                 check[count++] = CheckSimilarity(n.in, inPrime, n.out, outPrime);
             }
             counter++;
         }while(!Alltrue(check));
-        System.out.println("counter: " + counter);
         return new Liveness(inList, defList, useList);
     }
 
@@ -72,15 +69,6 @@ public class FlowGraph {
         return new ArrayList<String>(tempSet);
     }
 
-    public ArrayList<String> intersection(List<String> LHS, List<String> RHS){
-        ArrayList<String> tempList = new ArrayList<>();
-
-        for(String s: LHS)
-            if(RHS.contains(s))
-                tempList.add(s);
-        return tempList;
-    }
-
     public ArrayList<String> subtraction(List<String> LHS, List<String> RHS) {
         ArrayList<String> tempList = new ArrayList<>();
         for(String s : LHS){
@@ -88,12 +76,6 @@ public class FlowGraph {
                 tempList.add(s);
         }
         return tempList;
-    }
-
-    public void AddArray(List<String> LHS, List<String> RHS){
-        for(String str : RHS){
-            LHS.add(str);
-        }
     }
 
     public boolean CheckSimilarity(List<String> in1, List<String> in2, List<String> out1, List<String> out2){
@@ -106,5 +88,4 @@ public class FlowGraph {
         }
         return true;
     }
-
 }

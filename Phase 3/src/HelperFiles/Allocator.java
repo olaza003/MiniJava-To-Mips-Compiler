@@ -1,4 +1,4 @@
-package hw3;
+package HelperFiles;
 
 import cs132.vapor.ast.VVarRef;
 
@@ -6,51 +6,58 @@ import java.util.*;
 
 public class Allocator {
     public List<IntervalNode> active;
-    public List<Register> registerPool;
+
+    public RegisterPool regPool;
+    public String[] registers = {"$t0", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8"};// "$s0", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", "$s7"};
+
+    public String[] sRegisters = {"$s0", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", "$s7"};
+
 
     public List<IntervalNode> intervalStack;
 
-    public HashMap<String, Register> regHashMap;
+    public HashMap<String, Register> regHashMap = new HashMap<>();
 
     public AllocationMap computeAllocation(List<IntervalNode> intervals, VVarRef.Local[] params){
-
+        regHashMap = new HashMap<>();
+        regPool = new RegisterPool(registers, sRegisters);
         active = new ArrayList<>();
-        registerPool = Register.createRegisterPool();
+        intervalStack = new ArrayList<>();
+
         sortIntervalList(intervals, true);
         for(IntervalNode i: intervals){
             expireOldIntervals(i);
-            if(active.size() == registerPool.size())
+            if(active.size() == regPool.allRegisters.size())
                 spillAtInterval(i);
             else {
-                //remove from pool of registers
+                regHashMap.put(i.variable, regPool.getRegister(i));
                 active.add(i);
-                sortIntervalList(active, false);
             }
+            sortIntervalList(active, false);
         }
-
-
-
-        AllocationMap temp = new AllocationMap(regHashMap);
+        AllocationMap temp = new AllocationMap(regHashMap, intervalStack);
+        HashMap<String, Register> t = temp.registerHashMap;
         return temp;
     }
 
     public void expireOldIntervals(IntervalNode i){
-        for(IntervalNode j: active){
+        System.out.println();
+        List<IntervalNode> tempActive = new ArrayList<>(active);
+        for(IntervalNode j: tempActive){
             if(j.end >= i.start)
                 return;
+            regPool.freeUsed(regHashMap.get(j.variable));
             active.remove(j);
-            registerPool.add(j.register);
+
         }
     }
 
     public void spillAtInterval(IntervalNode i){
         IntervalNode spill = active.get(active.size() - 1);
         if(spill.end > i.end){
-            i.register = spill.register;
+            regHashMap.put(i.variable, regHashMap.get(spill.variable));
             intervalStack.add(spill);
             active.remove(spill);
             active.add(i);
-            sortIntervalList(active, false);
         }
         else
             intervalStack.add(i);

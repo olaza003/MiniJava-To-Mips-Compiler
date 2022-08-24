@@ -6,16 +6,13 @@ import cs132.vapor.ast.VOperand;
 import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
 
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.InputStream;
-
+import java.io.*;
 import java.util.*;
 
-import hw3.*;
+import HelperFiles.*;
 
 public class V2VM {
+    public static String content = "";
     public static void processStream(InputStream stream){
         try{
             VaporProgram program = parseVapor(System.in, System.err);
@@ -23,16 +20,16 @@ public class V2VM {
             vConverter conv = new vConverter();
 
             conv.getSegments(program.dataSegments);
-
             for(VFunction func : program.functions){
                 System.out.println(func.ident);
+
                 FlowGraph graph = RegAllocHelper.generateFlowGraph(func);
                 Liveness liveness = graph.computeLiveness();
                 List<IntervalNode> intervals = RegAllocHelper.generateLiveIntervals(graph, liveness); //'this' variable range incorrect, everything else correct
                 AllocationMap map = allocator.computeAllocation(intervals, func.params);
                 conv.outputFunction(func, map, liveness);
-                System.out.println();
             }
+            System.out.println(conv.fileString);
         }
         catch (Exception e){
             System.out.println("Type error");
@@ -65,14 +62,5 @@ public class V2VM {
         }
       
         return tree;
-      }
-
-      public void print(VaporProgram vprog){
-          for(VDataSegment it : vprog.dataSegments){
-            System.out.println("const " + it.ident);
-            for(VOperand.Static ir : it.values){
-                System.out.println("\t" + ir);
-            }
-          }
     }
 }
