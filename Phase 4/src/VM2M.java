@@ -14,7 +14,23 @@ public class VM2M {
     }
 
     public static void processStream(InputStream var0) {
-        System.out.println("hello world");
+        try {
+            VaporProgram program = parseVapor(System.in, System.err);
+            System.out.println("Hello world");
+            Printer print = new Printer();
+
+            System.out.println(program.dataSegments);
+            String str = print.printDataSeg(program.dataSegments);
+            System.out.println(str);
+            ////System.out.println(program.functions.);
+            for (VFunction func : program.functions) {
+
+            }
+        }
+        catch (Exception e){
+            System.out.println("Type error");
+            e.printStackTrace();
+        }
     }
 
 
