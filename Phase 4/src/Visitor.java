@@ -1,6 +1,11 @@
 import cs132.vapor.ast.*;
 public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
     private static final String IDENT = "  ";
+    public String destination = "";
+    public String source = "";
+    public String operation = "";
+    public int offset = 0;
+
     @Override
     public String visit(VAssign vAssign) throws RuntimeException {
         System.out.println("VAssign");
@@ -64,13 +69,32 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
     @Override
     public String visit(VMemWrite vMemWrite) throws RuntimeException {
         //System.out.println("VMemWrite");
+        String str = "";
         if(vMemWrite.dest instanceof VMemRef.Global){
-
+            if(vMemWrite.source instanceof VVarRef.Register){
+                destination = ((VMemRef.Global) vMemWrite.dest).base.toString();
+                source = vMemWrite.source.toString();
+                offset = ((VMemRef.Global) vMemWrite.dest).byteOffset;
+                str += IDENT + String.format("sw %s %d(%s)\n", source, offset, destination);
+            }
+            else{
+                String tempDest = "";
+                operation = (vMemWrite.source instanceof VLabelRef) ? "la" : "li";
+                destination = ((VMemRef.Global) vMemWrite.dest).base.toString();
+                tempDest = "$t9";
+                offset = ((VMemRef.Global) vMemWrite.dest).byteOffset;
+                source = (vMemWrite.source instanceof VLabelRef) ? vMemWrite.source.toString().substring(1) : vMemWrite.source.toString();
+                str += IDENT + String.format("%s %s %s\n", operation, tempDest, source);
+                str += IDENT + String.format("sw %s %d(%s)\n", tempDest, offset, destination);
+            }
         }
         else{ //if(vMemWrite.dest instanceof VMemRef.Stack)
-
-        }
-        return IDENT + "vMemWrite\n";
+            System.out.println("here");
+            destination = "$sp";
+            source = vMemWrite.source.toString();
+            offset = ((VMemRef.Stack)vMemWrite.dest).index * 4;
+            str += IDENT + String.format("sw %s %d(%s)\n", source, offset, destination);
+        }return str;
     }
 
     @Override

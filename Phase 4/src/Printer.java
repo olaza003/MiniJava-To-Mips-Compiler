@@ -23,7 +23,7 @@ public class Printer {
             dataSeg += "\n";
         }
         decreaseIdent();
-        dataSeg += "\n" + ident + ".text\n\n";
+        dataSeg += ident + ".text\n\n";
         increaseIdent();
         dataSeg += ident + "jal Main\n";
         dataSeg += ident + "li $v0 10\n";
@@ -48,7 +48,6 @@ public class Printer {
         /*for(VCodeLabel label : func.labels){
             System.out.println(label.instrIndex + ": " + label.ident);
         }*/
-        dataFunc += ident + "sw $r -4($fp)\n";
 
         for(int i = 0; i < funcBody.length; i++){
             VInstr node = funcBody[i];
