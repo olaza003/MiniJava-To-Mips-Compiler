@@ -64,6 +64,12 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
     @Override
     public String visit(VMemWrite vMemWrite) throws RuntimeException {
         //System.out.println("VMemWrite");
+        if(vMemWrite.dest instanceof VMemRef.Global){
+
+        }
+        else{ //if(vMemWrite.dest instanceof VMemRef.Stack)
+
+        }
         return IDENT + "vMemWrite\n";
     }
 
