@@ -33,6 +33,7 @@ public class Printer {
     }
 
     public String printFunction(VFunction func){
+        dataFunc = "";
         HashMap<Integer, List<String>> labelMap = labelGetter(func);
         VInstr[] funcBody = func.body;
         Visitor visit = new Visitor();
@@ -43,13 +44,18 @@ public class Printer {
         dataFunc += ident + "sw $fp -8($sp)\n";
         dataFunc += ident + "move $fp $sp\n";
         dataFunc += ident + "subu $sp $sp " + Integer.toString((func.stack.out + func.stack.local + 2)*4) + "\n";
+        dataFunc += ident + "sw $ra -4($fp)\n";
+        /*for(VCodeLabel label : func.labels){
+            System.out.println(label.instrIndex + ": " + label.ident);
+        }*/
         dataFunc += ident + "sw $r -4($fp)\n";
 
         for(int i = 0; i < funcBody.length; i++){
             VInstr node = funcBody[i];
             printLabels(labelMap, i);
             String s = node.accept(visit);
-            dataFunc += ident + s + "\n";
+            //dataFunc += ident + s + "\n";
+            dataFunc += s;
             //System.out.println(node);
         }
 
