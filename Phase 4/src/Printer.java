@@ -84,7 +84,7 @@ public class Printer {
 
         ending += "_error:\n";
         ending += ident + "li $v0 4   # syscall: print string\n";
-        ending += ident + "syscall";
+        ending += ident + "syscall\n";
         ending += ident + "li $v0 10   # syscall: exit\n";
         ending += ident + "syscall\n\n";
 
