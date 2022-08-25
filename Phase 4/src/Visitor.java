@@ -14,15 +14,21 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
             return IDENT + "move " + vAssign.dest.toString() + " " + vAssign.source.toString() + "\n";
         }
         else{
-            return IDENT + "li "+ vAssign.dest.toString() + " " + vAssign.source.toString() + "\n";
+            String tempSource = vAssign.source.toString();
+            if(vAssign.source.toString().substring(0, 1).equals(":"))
+                tempSource = vAssign.source.toString().substring(1);
+
+            return IDENT + "li "+ vAssign.dest.toString() + " " + tempSource + "\n";
         }
     }
 
     @Override
     public String visit(VCall vCall) throws RuntimeException {
         System.out.println("VCall");
-
-        return IDENT + "jalr " + vCall.addr.toString() + "\n";
+        String tempSource = vCall.addr.toString();
+        if(vCall.addr.toString().substring(0, 1).equals(":"))
+            tempSource = vCall.addr.toString().substring(1);
+        return IDENT + "jalr " + tempSource + "\n";
     }
 
     @Override

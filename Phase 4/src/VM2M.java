@@ -41,7 +41,7 @@ public class VM2M {
 
     public static void printFile(String s){
         try{
-            FileWriter writer = new FileWriter("P.txt");
+            FileWriter writer = new FileWriter("Phase 4\\src\\P.txt");
             writer.write(s);
             writer.close();
         }
