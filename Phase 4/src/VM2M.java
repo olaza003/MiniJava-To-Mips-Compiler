@@ -16,25 +16,16 @@ public class VM2M {
     public static void processStream(InputStream var0) {
         try {
             VaporProgram program = parseVapor(System.in, System.err);
-            //System.out.println("Hello world");
             Printer print = new Printer();
 
-            //System.out.println(program.dataSegments);
-            String str = print.printDataSeg(program.dataSegments);
-            fileOutput += str;
-            System.out.println(str);
-            ////System.out.println(program.functions.);
+            fileOutput += print.printDataSeg(program.dataSegments);
             for (VFunction func : program.functions) {
-                String s = print.printFunction(func);
-                System.out.print(s);
-                fileOutput += s;
+                fileOutput += print.printFunction(func);
             }
             fileOutput += print.printEnd();
             printFile(fileOutput);
-            System.out.println(print.printEnd());
         }
         catch (Exception e){
-            System.out.println("Type error");
             e.printStackTrace();
         }
     }

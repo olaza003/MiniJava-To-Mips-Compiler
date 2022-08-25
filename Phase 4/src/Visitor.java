@@ -8,8 +8,6 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
 
     @Override
     public String visit(VAssign vAssign) throws RuntimeException {
-        //System.out.println("VAssign");
-        String str = "";
         if(vAssign.source instanceof VVarRef.Register){
             return IDENT + "move " + vAssign.dest.toString() + " " + vAssign.source.toString() + "\n";
         }
@@ -23,9 +21,7 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
 
     @Override
     public String visit(VCall vCall) throws RuntimeException {
-        //System.out.println("VCall");
         return vCall.addr instanceof VAddr.Var<?> ? IDENT + "jalr " + vCall.addr.toString() + "\n" : IDENT + "jal " + vCall.addr.toString().substring(1) + "\n";
-        //return IDENT + "jalr " + vCall.addr.toString() + "\n";
     }
 
     @Override
@@ -190,7 +186,6 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
 
     @Override
     public String visit(VMemWrite vMemWrite) throws RuntimeException {
-        //System.out.println("VMemWrite");
         String str = "";
         if(vMemWrite.dest instanceof VMemRef.Global){
             if(vMemWrite.source instanceof VVarRef.Register){
@@ -211,17 +206,26 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
             }
         }
         else{ //if(vMemWrite.dest instanceof VMemRef.Stack)
-            System.out.println("here");
-            destination = "$sp";
-            source = vMemWrite.source.toString();
-            offset = ((VMemRef.Stack)vMemWrite.dest).index * 4;
-            str += IDENT + String.format("sw %s %d(%s)\n", source, offset, destination);
+            if(vMemWrite.source instanceof VVarRef.Register){
+                destination = "$sp";
+                source = vMemWrite.source.toString();
+                offset = ((VMemRef.Stack)vMemWrite.dest).index * 4;
+                str += IDENT + String.format("sw %s %d(%s)\n", source, offset, destination);
+            }
+            else{
+                String tempDest = "$t9";
+                destination = "$sp";
+                source = vMemWrite.source.toString();
+                operation = "li";
+                offset = ((VMemRef.Stack)vMemWrite.dest).index * 4;
+                str += IDENT + String.format("%s %s %s\n", operation, tempDest, source);
+                str += IDENT + String.format("sw %s %d(%s)\n", tempDest, offset, destination);
+            }
         }return str;
     }
 
     @Override
     public String visit(VMemRead vMemRead) throws RuntimeException {
-        //System.out.println("VMemRead");
         String destination = vMemRead.dest.toString();
         VMemRef s = vMemRead.source;
         if(vMemRead.source instanceof VMemRef.Global){
@@ -229,17 +233,14 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
                     +((VMemRef.Global)s).base.toString() + ")\n";
         }
         else{
-            //System.out.println("Checker : " + ((VMemRef.Stack)vMemRead.source).region.name());
             String str = IDENT + "lw " + destination + " " +(((VMemRef.Stack)s).index)*4;// + "($sp)\n";
             str += ((VMemRef.Stack)vMemRead.source).region.name() == "In" ? "($fp)\n" : "($sp)\n";
             return str;
         }
-        //return IDENT + "vMemRead\n";
     }
 
     @Override
     public String visit(VBranch vBranch) throws RuntimeException {
-        //System.out.println("VBranch");
         if(vBranch.positive)
             return IDENT + "bnez " + vBranch.value.toString() + " " + vBranch.target.ident + "\n";
         else
@@ -248,13 +249,11 @@ public class Visitor extends VInstr.VisitorR<String, RuntimeException>{
 
     @Override
     public String visit(VGoto vGoto) throws RuntimeException {
-        //System.out.println("VGoto");
         return IDENT + "j " + vGoto.target.toString().substring(1) + "\n";
     }
 
     @Override
     public String visit(VReturn vReturn) throws RuntimeException {
-        //System.out.println("VReturn");
         return "";
     }
 }
