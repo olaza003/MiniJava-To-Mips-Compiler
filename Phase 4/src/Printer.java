@@ -77,14 +77,14 @@ public class Printer {
         ending += ident + "li $v0 1   # syscall: print integer\n";
         ending += ident + "syscall\n";
         ending += ident + "la $a0 _newline\n";
-        ending += ident + "li $v0 4   # syscallL print string\n";
+        ending += ident + "li $v0 4   # syscall: print string\n";
         ending += ident + "syscall\n";
         ending += ident + "jr $ra\n\n";
 
         ending += "_error:\n";
         ending += ident + "li $v0 4   # syscall: print string\n";
         ending += ident + "syscall\n";
-        ending += ident + "li $v0 10   # syscall: exit\n";
+        ending += ident + "li $v0 10  # syscall: exit\n";
         ending += ident + "syscall\n\n";
 
         ending += "_heapAlloc:\n";
@@ -92,7 +92,7 @@ public class Printer {
         ending += ident + "syscall\n";
         ending += ident + "jr $ra\n\n";
 
-        ending += ".data\n.align 0\n_newline: .asciiz \"\\n\"\n_str0: .asciiz \"null pointer\\n\"";
+        ending += ".data\n.align 0\n_newline: .asciiz \"\\n\"\n_str0: .asciiz \"null pointer\\n\"\n_str1: .asciiz \"array index out of bounds\\n\"";
         return ending;
     }
 
