@@ -33,6 +33,7 @@ public class Printer {
     }
 
     public String printFunction(VFunction func){
+        HashMap<Integer, List<String>> labelMap = labelGetter(func);
         VInstr[] funcBody = func.body;
         Visitor visit = new Visitor();
         //System.out.println(func.ident + ":\n");
@@ -43,25 +44,17 @@ public class Printer {
         dataFunc += ident + "move $fp $sp\n";
         dataFunc += ident + "subu $sp $sp " + Integer.toString((func.stack.out + func.stack.local + 2)*4) + "\n";
         dataFunc += ident + "sw $r -4($fp)\n";
-        for(VCodeLabel label : func.labels){
+        /*for(VCodeLabel label : func.labels){
             System.out.println(label.instrIndex + ": " + label.ident);
-        }
+        }*/
 
-        decreaseIdent();//inside Visitor class it does ident already
-        int labelCount = 0;
         for(int i = 0; i < funcBody.length; i++){
             VInstr node = funcBody[i];
-            if(labelCount < func.labels.length ) {
-                if (func.labels[labelCount].instrIndex == i - 1) {
-                    dataFunc += func.labels[labelCount].ident + ":\n";
-                    labelCount++;
-                }
-            }
-            dataFunc += node.accept(visit);
-
+            printLabels(labelMap, i);
+            String s = node.accept(visit);
+            dataFunc += ident + s + "\n";
             //System.out.println(node);
         }
-        increaseIdent();
 
         dataFunc += ident + "lw $ra -4($fp)\n";
         dataFunc += ident + "lw $fp -8($fp)\n";
@@ -99,5 +92,30 @@ public class Printer {
 
         ending += ".data\n.align 0\n_newline: .asciiz \"\\n\"\n_str0: .asciiz \"null pointer\\n\"";
         return ending;
+    }
+
+    public HashMap<Integer, List<String>> labelGetter(VFunction func){
+        HashMap<Integer, List<String>> labelMap = new HashMap<>();
+        for (VCodeLabel l : func.labels) {
+            List<String> temp = new ArrayList<>();
+            if(!labelMap.containsKey(l.instrIndex)) {  //if key in label hashmap isnt within hashmap
+                temp.add(l.ident);
+                labelMap.put(l.instrIndex, temp);
+            }
+            else{ //if key is found, means that there is another label at that instruction index and append to that list
+                temp = new ArrayList<>(labelMap.get(l.instrIndex));
+                temp.add(l.ident);
+                labelMap.put(l.instrIndex, temp);
+            }
+        }
+        return labelMap;
+    }
+
+    public void printLabels(HashMap<Integer, List<String>> labelMap, int key){
+        if(labelMap.containsKey(key)) {
+            for(String s: labelMap.get(key)){
+                dataFunc += s + ":\n";
+            }
+        }
     }
 }
