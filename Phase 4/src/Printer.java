@@ -23,7 +23,7 @@ public class Printer {
             dataSeg += "\n";
         }
         decreaseIdent();
-        dataSeg += "\n" + ident + ".text\n\n";
+        dataSeg += ident + ".text\n\n";
         increaseIdent();
         dataSeg += ident + "jal Main\n";
         dataSeg += ident + "li $v0 10\n";

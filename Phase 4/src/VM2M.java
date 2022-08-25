@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 public class VM2M {
-
+    public static String fileOutput = "";
     public static void main(String[] args) {
         processStream(System.in);
     }
@@ -21,16 +21,31 @@ public class VM2M {
 
             //System.out.println(program.dataSegments);
             String str = print.printDataSeg(program.dataSegments);
+            fileOutput += str;
             System.out.println(str);
             ////System.out.println(program.functions.);
             for (VFunction func : program.functions) {
                 String s = print.printFunction(func);
                 System.out.print(s);
+                fileOutput += s;
             }
+            fileOutput += print.printEnd();
+            printFile(fileOutput);
             System.out.println(print.printEnd());
         }
         catch (Exception e){
             System.out.println("Type error");
+            e.printStackTrace();
+        }
+    }
+
+    public static void printFile(String s){
+        try{
+            FileWriter writer = new FileWriter("Phase 4\\src\\P.txt");
+            writer.write(s);
+            writer.close();
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }
