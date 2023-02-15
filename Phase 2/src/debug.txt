@@ -1,0 +1,658 @@
+
+const vmt_LS
+  :LS.Start
+  :LS.Print
+  :LS.Search
+  :LS.Init
+
+
+Maincl
+Statement
+Print
+express
+MessageSend
+primaryEx
+AllocEx
+Ident: LS
+PARAM AT IDENT: null
+end alloc
+end primaryEx
+Ident: Start
+PARAM AT IDENT: null
+ExpressionList
+express
+primaryEx
+IntegerLit: 10
+end primaryEx
+end express
+end ExpressionList
+end express
+----->> t.2 = t.2
+end Statement
+Typedec
+Classdec
+VarDec
+VarDec
+
+
+MethodDec: Start
+VarDec
+VarDec
+Statement
+assignmentState
+Ident: aux01
+PARAM AT IDENT: null
+express
+MessageSend
+primaryEx
+ThisEx
+end primaryEx
+Ident: Init
+PARAM AT IDENT: null
+ExpressionList
+express
+primaryEx
+Ident: sz
+PARAM AT IDENT: expressionParameters
+end primaryEx
+end express
+end ExpressionList
+end express
+----- call t.0(this sz)
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: aux02
+PARAM AT IDENT: null
+express
+MessageSend
+primaryEx
+ThisEx
+end primaryEx
+Ident: Print
+PARAM AT IDENT: null
+end express
+----- call t.1(this)
+end assignmentState
+end Statement
+Statement
+Print
+express
+primaryEx
+IntegerLit: 9999
+end primaryEx
+end express
+----->> 9999 = 
+end Statement
+Statement
+Print
+express
+MessageSend
+primaryEx
+ThisEx
+end primaryEx
+Ident: Search
+PARAM AT IDENT: null
+ExpressionList
+express
+primaryEx
+IntegerLit: 8
+end primaryEx
+end express
+end ExpressionList
+end express
+----->> t.3 = t.3
+end Statement
+Statement
+Print
+express
+MessageSend
+primaryEx
+ThisEx
+end primaryEx
+Ident: Search
+PARAM AT IDENT: null
+ExpressionList
+express
+primaryEx
+IntegerLit: 12
+end primaryEx
+end express
+end ExpressionList
+end express
+----->> t.5 = t.5
+end Statement
+Statement
+Print
+express
+MessageSend
+primaryEx
+ThisEx
+end primaryEx
+Ident: Search
+PARAM AT IDENT: null
+ExpressionList
+express
+primaryEx
+IntegerLit: 17
+end primaryEx
+end express
+end ExpressionList
+end express
+----->> t.7 = t.7
+end Statement
+Statement
+Print
+express
+MessageSend
+primaryEx
+ThisEx
+end primaryEx
+Ident: Search
+PARAM AT IDENT: null
+ExpressionList
+express
+primaryEx
+IntegerLit: 50
+end primaryEx
+end express
+end ExpressionList
+end express
+----->> t.9 = t.9
+end Statement
+express
+primaryEx
+IntegerLit: 55
+end primaryEx
+end express
+
+
+MethodDec: Print
+VarDec
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- 1
+end assignmentState
+end Statement
+Statement
+While
+express
+Compare
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Bracket
+express
+primaryEx
+Ident: size
+PARAM AT IDENT: null
+end primaryEx
+end express
+end primaryEx
+end express
+Statement
+block
+Statement
+Print
+express
+arraylook
+primaryEx
+Ident: number
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+end express
+----->> number = t.1
+end Statement
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+PlusEx
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- Add(j 1)
+end assignmentState
+end Statement
+end Statement
+end Statement
+express
+primaryEx
+IntegerLit: 0
+end primaryEx
+end express
+
+
+MethodDec: Search
+VarDec
+VarDec
+VarDec
+VarDec
+VarDec
+VarDec
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- 1
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: ls01
+PARAM AT IDENT: null
+express
+primaryEx
+FalseLit
+end primaryEx
+end express
+----- 0
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: ifound
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 0
+end primaryEx
+end express
+----- 0
+end assignmentState
+end Statement
+Statement
+While
+express
+Compare
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Bracket
+express
+primaryEx
+Ident: size
+PARAM AT IDENT: null
+end primaryEx
+end express
+end primaryEx
+end express
+Statement
+block
+Statement
+assignmentState
+Ident: aux01
+PARAM AT IDENT: null
+express
+arraylook
+primaryEx
+Ident: number
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+end express
+----- number
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: aux02
+PARAM AT IDENT: null
+express
+PlusEx
+primaryEx
+Ident: num
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- Add(num 1)
+end assignmentState
+end Statement
+Statement
+ifState
+express
+Compare
+primaryEx
+Ident: aux01
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Ident: num
+PARAM AT IDENT: null
+end primaryEx
+end express
+Statement
+assignmentState
+Ident: nt
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 0
+end primaryEx
+end express
+----- 0
+end assignmentState
+end Statement
+Enter if f6
+Statement
+ifState
+express
+primaryEx
+NotEx
+express
+primaryEx
+Bracket
+express
+Compare
+primaryEx
+Ident: aux01
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Ident: aux02
+PARAM AT IDENT: null
+end primaryEx
+end express
+end primaryEx
+end express
+Not Ex: t.3 t.3
+end primaryEx
+end express
+Statement
+assignmentState
+Ident: nt
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 0
+end primaryEx
+end express
+----- 0
+end assignmentState
+end Statement
+Enter if f6
+Statement
+block
+Statement
+assignmentState
+Ident: ls01
+PARAM AT IDENT: null
+express
+primaryEx
+TrueLit
+end primaryEx
+end express
+----- 1
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: ifound
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- 1
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+primaryEx
+Ident: size
+PARAM AT IDENT: assigning
+end primaryEx
+end express
+----- size
+end assignmentState
+end Statement
+end Statement
+end Statement
+end Statement
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+PlusEx
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- Add(j 1)
+end assignmentState
+end Statement
+end Statement
+end Statement
+express
+primaryEx
+Ident: ifound
+PARAM AT IDENT: null
+end primaryEx
+end express
+
+
+MethodDec: Init
+VarDec
+VarDec
+VarDec
+VarDec
+Statement
+assignmentState
+Ident: size
+PARAM AT IDENT: null
+express
+primaryEx
+Ident: sz
+PARAM AT IDENT: assigning
+end primaryEx
+end express
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: number
+PARAM AT IDENT: null
+express
+primaryEx
+ArrayAlloc
+express
+primaryEx
+Ident: sz
+PARAM AT IDENT: null
+end primaryEx
+end express
+end primaryEx
+end express
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- 1
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: k
+PARAM AT IDENT: null
+express
+PlusEx
+primaryEx
+Ident: size
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- Add(size 1)
+end assignmentState
+end Statement
+Statement
+While
+express
+Compare
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Bracket
+express
+primaryEx
+Ident: size
+PARAM AT IDENT: null
+end primaryEx
+end express
+end primaryEx
+end express
+Statement
+block
+Statement
+assignmentState
+Ident: aux01
+PARAM AT IDENT: null
+express
+TimesEx
+primaryEx
+IntegerLit: 2
+end primaryEx
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+end express
+----- MulS(2 t.2)
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: aux02
+PARAM AT IDENT: null
+express
+Minusex
+primaryEx
+Ident: k
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 3
+end primaryEx
+end minus
+end express
+----- Sub(k 3)
+end assignmentState
+end Statement
+Statement
+ArrayAssign
+express
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+end express
+express
+PlusEx
+primaryEx
+Ident: aux01
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+Ident: aux02
+PARAM AT IDENT: null
+end primaryEx
+end express
+end Statement
+Statement
+assignmentState
+Ident: j
+PARAM AT IDENT: null
+express
+PlusEx
+primaryEx
+Ident: j
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 1
+end primaryEx
+end express
+----- Add(j 1)
+end assignmentState
+end Statement
+Statement
+assignmentState
+Ident: k
+PARAM AT IDENT: null
+express
+Minusex
+primaryEx
+Ident: k
+PARAM AT IDENT: null
+end primaryEx
+primaryEx
+IntegerLit: 1
+end primaryEx
+end minus
+end express
+----- Sub(k 1)
+end assignmentState
+end Statement
+end Statement
+end Statement
+express
+primaryEx
+IntegerLit: 0
+end primaryEx
+end express
+Exit Typedec
+Pass2 Ends 
+done

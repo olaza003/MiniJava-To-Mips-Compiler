@@ -1,0 +1,20 @@
+First run the J2V.java with the 'javac J2V.java'
+The J2V is similar to the Typecheck.java from phase1
+
+It goes to the pass1 which just goes through the whole passed program.
+Then it just grabs the class then its respective objects and methods and its all done
+under the pass1.java.
+
+There it gets the holder function and we just use that as a way to save stuff. Tho, I have not 
+set up the extends and such. Also theres a problem with the order its printing and doesn't 
+follow the expected output. Might need to check on that. If you check the holder program in the maps
+the comments below it shows what I put in them. So as you can see it doesn't handle the superclass yet.
+
+Now after the whole program passed to the J2V has been finished we pass the holder class, the one under 
+the pass1 to the printer.java.
+
+In printer.java it just grabs the hashmap from hold and create a print or return a string. 
+
+That's mainly it. 
+
+TLDR: J2V -> pass1 (with holder) -> printer

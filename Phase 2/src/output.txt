@@ -1,0 +1,29 @@
+const vmt_TV
+  :TV.Start
+
+const vmt_Tree
+  :Tree.Init
+  :Tree.SetRight
+  :Tree.SetLeft
+  :Tree.GetRight
+  :Tree.GetLeft
+  :Tree.GetKey
+  :Tree.SetKey
+  :Tree.GetHas_Right
+  :Tree.GetHas_Left
+  :Tree.SetHas_Left
+  :Tree.SetHas_Right
+  :Tree.Compare
+  :Tree.Insert
+  :Tree.Delete
+  :Tree.Remove
+  :Tree.RemoveRight
+  :Tree.RemoveLeft
+  :Tree.Search
+  :Tree.Print
+  :Tree.RecPrint
+  :Tree.accept
+
+const vmt_Visitor
+  :Visitor.visit
+
